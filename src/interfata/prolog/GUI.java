@@ -1,21 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package interfata.prolog;
 
-/**
- *
- * @author Acasa
- */
 public class GUI extends javax.swing.JFrame {
 
-    /**
-     * Creates new form GUI
-     */
-    public GUI() {
+    //Creaza o instanta a conexiunii la Prolog
+    ConexiuneProlog conexiune;
+    public GUI(String title) {
+        //Seteaza titlul 
+        super(title);
         initComponents();
+    }
+
+    GUI(String interfata_Prolog) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -73,7 +70,7 @@ public class GUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GUI().setVisible(true);
+                new GUI("Test").setVisible(true);
             }
         });
     }
