@@ -1,0 +1,8 @@
+rg::id
+conditii={
+    atr e egal cu valoare ,
+    atr ,
+    atr[fals]
+}
+atunci
+    atr e egal cu valoare fc:nr
