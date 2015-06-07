@@ -1,8 +1,8 @@
-rg::id
+rg::1
 conditii={
-    atr e egal cu valoare ,
-    atr ,
-    atr[fals]
+    ore_joc_calculator_zi e egal cu 'mai mult de 8 ore' ,
+    bun_la_matematica ,
+    lenes[fals]
 }
 atunci
-    atr e egal cu valoare fc:nr
+    ocupatie e egal cu developper_jocuri_pc fc:60
