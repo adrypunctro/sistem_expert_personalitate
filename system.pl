@@ -181,6 +181,267 @@ fg(Scop, FC, _):-
 
 	
 
+/* pot_interoga ------------------------------------------------------------------------
+	Specificatie predicat: scopuri_princ TODO: parametrii
+	Descriere: TODO: descriere
+*/
+pot_interoga(av(Atr,_), Istorie):-
+	not interogat(av(Atr, _)),
+	interogabil(Atr, Optiuni, Mesaj),
+	interogheaza(Atr, Mesaj, Optiuni, Istorie),
+	nl,
+	asserta(interogat(av(Atr,_))).
+
+
+	
+/* cum ------------------------------------------------------------------------
+	Specificatie predicat: scopuri_princ TODO: parametrii
+	Descriere: TODO: descriere
+*/
+cum([]):-
+	write('Scop? '),
+	nl,
+	write('|:'),
+	citeste_linie(Linie),
+	nl,
+	transformare(Scop, Linie),
+	cum(Scop).
+cum(L):-
+	transformare(Scop, L),
+	nl,
+	cum(Scop).
+cum(not Scop):-
+	fapt(Scop. FC, Reguli),
+	lista_float_int(Reguli, Reguli1),
+	FC < -20,
+	transformare(not Scop, PG),
+	append(PG, [a,fost,derivat,cu,ajutorul, 'regulilor:'|Reguli1],LL),
+	scrie_lista(LL),
+	nl,
+	afis_reguli(Reguli),
+	fail.
+cum(Scop):-
+	fapt(Scop, FC, Reguli),
+	lista_float_int(Reguli,Reguli1),
+	FC > 20,
+	transformare(Scop, PG),
+	append(PG, [a, fost, derivat, cu, ajutorul, 'regulilor:'|Reguli1], LL),
+	scrie_lista(LL),
+	nl,
+	afis_reguli(Reguli),
+	fail.
+cum(_).
+
+
+
+/* afis_reguli ------------------------------------------------------------------------
+	Specificatie predicat: incarca_reguli
+	Descriere:
+*/
+afis_reguli([]).
+afis_reguli([N|X]):-
+	afis_regula(N),
+	premisele(N),
+	afis_reguli(X).
+
+
+
+/* afis_regula ------------------------------------------------------------------------
+	Specificatie predicat: incarca_reguli
+	Descriere:
+*/
+afis_regula(N):-
+	regula(N, premise(Lista_premise), concluzie(Scop, FC)),
+	NN is integer(N),
+	scrie_lista(['regula ', NN]),
+	scrie_lista([' Daca ']),
+	scrie_lista_premise(Lista_premise),
+	scrie_lista([' Atunci']),
+	transformare(Scop, Scop_tr),
+	append([' '], Scop_tr, L1),
+	FC1 is integer(FC),
+	append(L1, [FC1], LL),
+	scrie_lista(LL),
+	nl.
+
+	
+
+/* scrie_lista_premise ------------------------------------------------------------------------
+	Specificatie predicat: incarca_reguli
+	Descriere:
+*/
+scrie_lista_premise([]).
+scrie_lista_premise([H|T]):-
+	transformare(H,H_tr),
+	tab(5),
+	scrie_lista(H_tr),
+	scrie_lista_premise(T).
+
+	
+	
+/* transformare ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+transformare(av(A,da),[A]):-
+	!.
+transformare(not av(A,da), [not,A]):-
+	!.
+transformare(av(A,nu),[not,A]):-
+	!.
+transformare(av(A,V),[A,este,V]).
+
+
+
+/* premise ------------------------------------------------------------------------
+	Specificatie predicat: premise
+	Descriere:
+*/
+premisele(N):-
+	regula(N, premise(Lista_premise), _),
+	!,
+	cum_premise(Lista_premise).
+
+	
+	
+/* cum_premise ------------------------------------------------------------------------
+	Specificatie predicat: cum_premise
+	Descriere:
+*/
+cum_premise([]).
+cum_premise([Scop|X]):-
+	cum(Scop),
+	cum_premise(X).
+
+	
+
+/* interogheaza ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+interogheaza(Atr, Mesaj, [da,nu], Istorie):-
+	!,
+	write(Mesaj),
+	nl,
+	de_la_utiliz(X, Istorie, [da, nu]),
+	det_val_fc(X, Val, FC),
+	asserta(fapt(av(Atr, Val), FC, [utiliz])).
+interogheaza(Atr, Mesaj, Optiuni, Istorie):-
+	write(Mesaj),
+	nl,
+	citeste_opt(VLista, Optiuni, Istorie),
+	assert_fapt(Atr, VLista).
+
+	
+	
+/* citeste_opt ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+citeste_opt(X, Optiuni, Istorie):-
+	append(['('], Optiuni, Opt1),
+	append(Opt1,[')'],Opt),
+	scrie_lista(Opt),
+	de_la_utiliz(X, Istorie, Optiuni).
+	
+	
+	
+/* de_la_utiliz ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+de_la_utiliz(X, Istorie, Lista_opt):-
+	repeat,
+	write(': '),
+	citeste_linie(X),
+	proceseaza_raspuns(X, Istorie, Lista_opt).
+
+	
+		
+/* proceseaza_raspuns ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+proceseaza_raspuns([de_ce], Istorie, _):-
+	nl,
+	afis_istorie(Istorie),
+	!,
+	fail.
+proceseaza_raspuns([X], _, Lista_opt):-
+	member(X, Lista_opt).
+proceseaza_raspuns([X,fc,FC], _, Lista_opt):-
+	member(X, Lista_opt), float(FC).
+	
+
+	
+/* assert_fapt ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+assert_fapt(Atr, [Val,fc,FC]):-
+	!,
+	asserta(fapt(av(Atr,Val), FC, [utiliz])).
+assert_fapt(Atr, [Val]):-
+	asserta(fapt(av(Atr,Val), 100, [utiliz])).
+	
+	
+	
+/* det_val_fc ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+det_val_fc([nu],da,-100).
+det_val_fc([nu,FC],da,NFC):-
+	NFC is -FC.
+det_val_fc([nu,fc,FC],da,NFC):-
+	NFC is -FC.
+det_val_fc([Val,FC],Val,FC).
+det_val_fc([Val,fc,FC],Val,FC).
+det_val_fc([Val],Val,100).
+
+
+
+/* afis_istorie ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+afis_istorie([]):-
+	nl.
+afis_istorie([scop(X)|T]):-
+	scrie_lista([scop, X]),
+	!,
+	afis_istorie(T).
+afis_istorie([N|T]):-
+	afis_regula(N),
+	!,
+	afis_istorie(T).
+
+
+	
+/* demonstreaza ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+demonstreaza(N, ListaPremise, Val_finala, Istorie):-
+	dem(ListaPremise, 100, Val_finala, [N|Istorie]),
+	!.
+
+	
+	
+/* dem ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+dem([], Val_finala, Val_finala, _).
+dem([H|T], Val_actuala, Val_finala, Istorie):-
+	realizare_scop(H, FC, Istorie),
+	Val_interm is min(Val_actuala, FC),
+	Val_interm >= 20,
+	dem(T, Val_interm, Val_finala, Istorie).
+
+
+
+
 /* incarca_reguli ------------------------------------------------------------------------
 	Specificatie predicat: incarca_reguli
 	Descriere:
