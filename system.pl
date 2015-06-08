@@ -439,9 +439,84 @@ dem([H|T], Val_actuala, Val_finala, Istorie):-
 	Val_interm >= 20,
 	dem(T, Val_interm, Val_finala, Istorie).
 
+	
+	
+/* actualizeaza ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+actualizeaza(Scop, FC_nou, FC, RegulaN):-
+	fapt(Scop, FC_vechi, _),
+	combina(FC_nou, FC_vechi, FC),
+	retract(fapt(Scop, FC_vechi, Reguli_vechi)),
+	asserta(fapt(Scop, FC, [RegulaN | Reguli_vechi])),
+	!.
+actualizeaza(Scop, FC, FC, RegulaN):-
+	asserta(fapt(Scop, FC, [RegulaN])).
+
+	
+	
+/* ajusteaza ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+ajusteaza(FC1, FC2, FC):-
+	X is FC1 * FC2 / 100,
+	FC is round(X).
+
+	
+	
+/* combina ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+combina(FC1, FC2, FC):-
+	FC1 >= 0,
+	FC2 >= 0,
+	X is FC2*(100-FC1)/100 + FC1,
+	FC is round(X).
+combina(FC1, FC2, FC):-
+	FC1 < 0,
+	FC2 < 0,
+	X is - ( -FC1 -FC2 * (100 + FC1)/100),
+	FC is round(X).
+combina(FC1, FC2, FC):-
+	(FC1 < 0; FC2 < 0),
+	(FC1 > 0; FC2 > 0),
+	FCM1 is abs(FC1), FCM2 is abs(FC2),
+	MFC is min(FCM1, FCM2),
+	X is 100 * (FC1 + FC2) / (100 - MFC),
+	FC is round(X).
+
+	
+	
+/* incarca ------------------------------------------------------------------------
+	Specificatie predicat: transformare
+	Descriere:
+*/
+incarca:-
+	write('Introduceti numele fisierului care doriti sa fie incarcat: '),
+	nl,
+	write('|:'),
+	read(F),
+	file_exists(F),
+	!,
+	incarca(F).
+incarca:-
+	write('Nume incorect de fisier! '),
+	nl,
+	fail.
+incarca(F):-
+	retractall(interogat(_)),
+	retractall(fapt(_,_,_)),
+	retractall(regula(_,_,_)),
+	see(F),
+	incarca_reguli,
+	seen,
+	!.
 
 
-
+	
 /* incarca_reguli ------------------------------------------------------------------------
 	Specificatie predicat: incarca_reguli
 	Descriere:
@@ -475,20 +550,19 @@ proceseaza(L):-
 	Descriere:
 		Predicat folosit pentru traducerea unei fraze valide din baza de cunostinte in formatul intern al Prologului.
 */
+trad(scop(X)) -->
+	[scopul, este, X].
+trad(scop(X)) -->
+	[scopul, X].
+trad(interogabil(Atr,M,P)) -->
+	[intreaba,Atr],
+	lista_optiuni(M),
+	afiseaza(Atr,P).
+trad(regula(N, premise(Daca), concluzie(Atunci,F))) -->
+	identificator(N),
+	daca(Daca),
+	atunci(Atunci,F).
+trad('Eroare la parsare'-L,L,_).
 
 
 
-
-
-scop::ocupatie.
-
-creaza_director(Nume):-
-	\+ exists_directory(Nume),
-	make_directory(Nume).
-	
-
-/* processFile ------------------------------------------------------------------------
-	Descriere: 
-	Specificatie predicat: processFile(+NumeFisier) 
-*/
-processFile(NumeFisier).
