@@ -88,3 +88,29 @@ b. Pentru intrebarile cu raspuns de tip da/nu, se va folosi un jToggleButton (im
 c. Intrebarile vor fi puse intr-un tabbed pane. La trecerea la o noua intrebare se va crea un nou tab. Intrebarile vechi vor putea fi accesate, dar nu si modificate (butonul "OK" va fi sters din tabul curent, atunci cand se creaza tabul cu urmatoarea intrebare).
 
 d. La final, se vor afisa raspunsurile cu factorii de certitudine. Va exista si un checkbox in dreptul fiecaruia, care in starea de "activat" va afisa sub raspuns un TextArea cu continutul demonstratiei pentru acel raspuns. Cand e debifat, TextArea-ul va fi ascuns.
+
+
+/* TESTARE PROGRAM *****************************************************************************************/
+| ?- pornire.
+Introduceti una din urmatoarele optiuni: 
+(Incarca Consulta Reinitiaza Afiseare_fapte Cum Iesire) 
+
+|: incarca
+Introduceti numele fisierului care doriti sa fie incarcat: 
+|:'rules.txt'.                                                                                                                                      
+Fisierul dorit a fost incarcat
+Introduceti una din urmatoarele optiuni: 
+(Incarca Consulta Reinitiaza Afiseare_fapte Cum Iesire) 
+
+|: consulta
+'Ce tip de buget alocati pentru petrecerea concediului?'
+( redus mediu mare ) 
+: redus
+
+loc_concediu este in_romania 
+   factorul de certitudine este 90
+
+Introduceti una din urmatoarele optiuni:
+(Incarca Consulta Reinitiaza Afiseare_fapte Cum Iesire) 
+
+|: iesire
