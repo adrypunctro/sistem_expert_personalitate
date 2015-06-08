@@ -622,9 +622,13 @@ proceseaza(L):-
 trad(scop(X)) -->% Pentru scop
 	[scop, este, X].
 trad(scop(X)) -->% Pentru scop
-	[scop, X].
+	[scop, ':',':',X].
+trad(interogabil(Atr,M,P)) -->% pentru intrebari custom
+	[???, Atr, '!','input'],% TODO trebuie facut sa lucreze separat
+	lista_optiuni(M),
+	afiseaza(Atr,P).
 trad(interogabil(Atr,M,P)) -->% pentru intrebari
-	[intreaba,Atr],
+	[???, Atr],
 	lista_optiuni(M),
 	afiseaza(Atr,P).
 trad(regula(N, premise(Daca), concluzie(Atunci,F))) -->% Pentru reguli
@@ -641,7 +645,7 @@ trad('Eroare la parsare'-L,L,_).
 	Descriere:
 */
 lista_optiuni(M) -->
-	[optiuni,'('],
+	[raspunsuri,posibile,':'],
 	lista_de_optiuni(M).
 
 	
@@ -652,9 +656,9 @@ lista_optiuni(M) -->
 	Descriere:
 */
 lista_de_optiuni([Element]) -->
-	[Element, ')'].
+	[Element,';'].
 lista_de_optiuni([Element|T]) -->
-	[Element], lista_de_optiuni(T).
+	[Element,';'], lista_de_optiuni(T).
 	
 	
 
@@ -664,7 +668,7 @@ lista_de_optiuni([Element|T]) -->
 	Descriere: TODO: de scris descrierea
 */
 afiseaza(_, P) -->
-	[afiseaza, P].
+	[intrebare, P].
 afiseaza(P, P) -->
 	[].
 
@@ -676,7 +680,7 @@ afiseaza(P, P) -->
 	Descriere: Parseaza regula si indentificatorul ei
 */
 identificator(N) -->
-	[rg, N].
+	[rg, ':', ':', N].
 
 	
 	
@@ -686,7 +690,7 @@ identificator(N) -->
 	Descriere: parseaza concluzia
 */
 daca(Daca) -->
-	[conditii],
+	[conditii,'=','{'],
 	lista_premise(Daca).
 
 	
@@ -716,7 +720,7 @@ lista_premise([Prima|Celelalte]) -->
 */
 atunci(Atunci, FC) -->
 	propoz(Atunci),
-	[fc],
+	[fc,':'],
 	[FC].
 atunci(Atunci, 100) -->
 	propoz(Atunci).
@@ -729,11 +733,11 @@ atunci(Atunci, 100) -->
 	Descriere:
 */
 propoz(not av(Atr, da)) -->
-	[not, Atr].
+	[Atr, fals].% parseaza comanda Atr[fals]
 propoz(av(Atr, Val)) -->
 	[Atr, este, Val].
 propoz(av(Atr, Val)) -->
-	[Atr, e, egal, cu, Val].
+	[Atr, e, egal, cu, Val].% parseaza comanda Atr e egal cu Val
 propoz(av(Atr, da)) -->
 	[Atr].
 
@@ -803,7 +807,7 @@ rest_cuvinte_propozitie(Car, [Cuv1|Lista_cuv]):-
 citeste_cuvant(-1, end_of_file, -1):-
 	!.
 citeste_cuvant(Caracter, Cuvant, Caracter1):-
-	caracter_cuvant(Caracter),% verifica daca este , ; : ? ! . ) (
+	caracter_cuvant(Caracter),
 	!,
 	name(Cuvant, [Caracter]),
 	get_code(Caracter1).
@@ -950,10 +954,10 @@ citeste_cuvant(_, Cuvant, Caracter1):-
 /* caracter_cuvant ------------------------------------------------------------------------
 	Specificatie predicat: lista_optiuni(?)
 	Parametrii:
-	Descriere: am specificat codurile ASCII pentru , ; : ? ! . ) (
+	Descriere: am specificat codurile ASCII pentru , . ) ( = { ; : !
 */
 caracter_cuvant(C):-
-	member(C, [44, 59, 63, 33, 46, 41, 40]).
+	member(C, [44, 46, 41, 40, 61, 123, 59, 58, 33]).
 	
 
 	
@@ -967,6 +971,7 @@ caractere_in_interiorul_unui_cuvant(C):-
 	C > 47, C < 58;% [0-9]
 	C == 45;% -
 	C == 95;% _
+	C == 63;% ?
 	C > 96, C < 123.% [a-z]
 
 	

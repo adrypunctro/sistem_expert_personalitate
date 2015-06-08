@@ -4,20 +4,39 @@ rg::1
 conditii={
 	buget_disponibil e egal cu redus
 }
-atunci loc_concediu e egal cu in_romania fc:90.
+atunci in_romania fc:90.
 
 rg::2
 conditii={
 	buget_disponibil e egal cu mediu
 }
-atunci loc_concediu e egal cu in_romania fc:70.
+atunci in_romania fc:70.
 
 rg::3
 conditii={
 	buget_disponibil e egal cu mare
 }
-atunci loc_concediu e egal cu in_romania fc:50.
+atunci in_strainatate fc:50.
 
-intreaba buget_disponibil
-optiuni (redus mediu mare)
-afiseaza 'Ce tip de buget alocati pentru petrecerea concediului?'.
+rg::4
+conditii={
+	in_romania,
+	buget_disponibil e egal cu redus
+}
+atunci loc_concediu e egal cu busteni fc:70.
+
+rg::5
+conditii={
+	la_mare[fals],
+	buget_disponibil e egal cu redus
+}
+atunci loc_concediu e egal cu galati fc:70.
+
+
+??? buget_disponibil !input
+raspunsuri posibile: zero; peste_2_ore;
+intrebare 'Cate ore petrece zilnic jucand jocuri pe calculator?'.
+
+??? la_mare
+raspunsuri posibile: da; nu;
+intrebare 'La mare?'.
