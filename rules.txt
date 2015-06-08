@@ -1,8 +1,17 @@
-rg::1
-conditii={
-    ore_joc_calculator_zi e egal cu 'mai mult de 8 ore' ,
-    bun_la_matematica ,
-    lenes[fals]
-}
-atunci
-    ocupatie e egal cu developper_jocuri_pc fc:60.
+scopul este loc_concediu.
+
+regula 1
+daca buget_disponibil este redus
+atunci loc_concediu este in_romania fc 90.
+
+regula 2
+daca buget_disponibil este mediu
+atunci loc_concediu este in_romania fc 70.
+
+regula 3
+daca buget_disponibil este mare
+atunci loc_concediu este in_romania fc 50.
+
+intreaba buget_disponibil
+optiuni (redus mediu mare)
+afiseaza 'Ce tip de buget alocati pentru petrecerea concediului?'.
