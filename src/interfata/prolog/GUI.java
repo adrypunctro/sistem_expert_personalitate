@@ -1,18 +1,33 @@
-
 package interfata.prolog;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 public class GUI extends javax.swing.JFrame {
 
-    //Creaza o instanta a conexiunii la Prolog
+    //Instanta a conexiunii
     ConexiuneProlog conexiune;
-    public GUI(String title) {
-        //Seteaza titlul 
-        super(title);
+    
+    //Taburile curente
+    int numTabs = 0;
+    private final JPanel[] panelArray = new javax.swing.JPanel[200];
+    private final JButton[] buttonArray = new javax.swing.JButton[200];
+    
+    //Constructorul ferestrei
+    public GUI(String titlu) throws IOException {
+        super(titlu);      
         initComponents();
     }
-
-    GUI(String interfata_Prolog) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public void setConexiune(ConexiuneProlog _conexiune){
+        conexiune=_conexiune;
     }
 
     /**
@@ -24,25 +39,81 @@ public class GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        introPanel = new javax.swing.JPanel();
+        titleLabel = new javax.swing.JLabel();
+        introPicLabel = new javax.swing.JLabel();
+        hideIntroButton = new javax.swing.JButton();
+        mainPanel = new javax.swing.JTabbedPane();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("frame1"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(750, 450));
+        setResizable(false);
+        getContentPane().setLayout(new java.awt.FlowLayout());
+
+        introPanel.setLayout(new java.awt.BorderLayout());
+
+        titleLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setText("Ce ocupatie ti se potriveste?");
+        introPanel.add(titleLabel, java.awt.BorderLayout.PAGE_START);
+
+        introPicLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        introPicLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/test.png"))); // NOI18N
+        introPicLabel.setToolTipText("");
+        introPanel.add(introPicLabel, java.awt.BorderLayout.LINE_END);
+
+        hideIntroButton.setText("Afla acum!");
+        hideIntroButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                hideIntroButtonActionPerformed(evt);
+            }
+        });
+        introPanel.add(hideIntroButton, java.awt.BorderLayout.PAGE_END);
+
+        getContentPane().add(introPanel);
+        getContentPane().add(mainPanel);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
+    //Codul pentru butonul care inchide interfata initiala
+    private void hideIntroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hideIntroButtonActionPerformed
+        introPanel.setVisible(false);
+        mainPanel.setVisible(true);
+        addTab('s');
+    }//GEN-LAST:event_hideIntroButtonActionPerformed
+
+    //Adauga un tab la tabbedPane. 's' = standard
+    private void addTab(char type) {
+        numTabs++;
+        switch (type) {
+            //Panel standard cu buton OK TODO
+            case 's':
+                String numeTab = "#" + numTabs;
+                
+                //Adauga un panel
+                panelArray[numTabs] = new JPanel();
+                panelArray[numTabs].setPreferredSize(new Dimension(650, 360));
+                panelArray[numTabs].setLayout(new BorderLayout());
+                
+                buttonArray[numTabs] = new JButton("OK");
+                buttonArray[numTabs].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) { 
+                        addTab('s');
+                        buttonArray[numTabs - 1].setEnabled(false);
+                    }
+                });
+                panelArray[numTabs].add(buttonArray[numTabs], BorderLayout.CENTER);
+                mainPanel.add(panelArray[numTabs],numeTab);
+                break;
+                
+        }
+            
+        
+    }
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -69,12 +140,23 @@ public class GUI extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                new GUI("Test").setVisible(true);
+                try {
+                    new GUI("Test").setVisible(true);
+                }
+                catch (IOException ex) {
+                    Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton hideIntroButton;
+    private javax.swing.JPanel introPanel;
+    private javax.swing.JLabel introPicLabel;
+    private javax.swing.JTabbedPane mainPanel;
+    private javax.swing.JLabel titleLabel;
     // End of variables declaration//GEN-END:variables
 }

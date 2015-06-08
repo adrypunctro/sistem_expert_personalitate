@@ -1,11 +1,16 @@
 package interfata.prolog;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
-public class CititorMesaje {
+public class CititorMesaje extends Thread {
     //Creaza instante pentru chestiile necesare
     ServerSocket servS;
     volatile Socket socket = null; //Volatile ca sa fie protejat la accesul concurent al mai multor threaduri
@@ -38,11 +43,53 @@ public class CititorMesaje {
         return pIS;
     }
     
-    //Constructor, initializeaza valorile
+    //Constructor, initializeaza valorile pentru cititor
     public CititorMesaje(ConexiuneProlog setConexiune, ServerSocket setServS) throws IOException {
         servS = setServS;
         conexiune = setConexiune;
     }
     
-    TODO
+    @Override
+    public void run() {
+        try {
+            //Apel blocant, asteapta conexiunea. Conexiunea clinetului se face din prolog
+            Socket sAux = servS.accept();
+            setSocket(sAux);
+            
+            //Se pregateste InputStream-ul pentru a citi date de la socket
+            InputStream inputS = sAux.getInputStream();
+            
+            //Se leaga un PipedInputStream de capatul in care se scrie
+            PipedOutputStream pOS = new PipedOutputStream();
+            setPipedInputStream(new PipedInputStream(pOS));
+            
+            //Se creaza variabilele necesare pentru citire
+            int chr;
+            String str = "";
+            
+            //Citeste date pana la end of file (EOF)
+            while ((chr = inputS.read()) != -1) {
+                //Se pun in pipe datele citite de la Prolog
+                pOS.write(chr);
+                str += (char)chr;
+                
+                //Daca s-a citit capatul randului, se creaza un sir cu tot continutul
+                if (chr == '\n') {
+                    final String sirDeScris = str;
+                    //Se reseteaza sirul initial
+                    str = "";
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Afiseaza textul citit in campul din interfata
+                            //TODO conexiune.getInterfata().getDebugTextArea().append(sirDeScris);
+                        }
+                    }); //End SwingUtilities..
+                }//End if
+            }//End while
+        }//End try
+        catch (IOException ex) {
+            Logger.getLogger(CititorMesaje.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
