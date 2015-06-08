@@ -5,6 +5,7 @@
 */
 :- use_module(library(lists)).
 :- use_module(library(system)).
+:- use_module(library(file_systems)).
 
 
 
@@ -277,7 +278,7 @@ cum(L):-
 	nl,
 	cum(Scop).
 cum(not Scop):-
-	fapt(Scop. FC, Reguli),
+	fapt(Scop, FC, Reguli),
 	lista_float_int(Reguli, Reguli1),
 	FC < -20,
 	transformare(not Scop, PG),
@@ -589,7 +590,7 @@ incarca(F):-
 */
 incarca_reguli:-
 	repeat,
-	citeste_propozitie(L),% TODO: predicat nedefinit
+	citeste_propozitie(L),
 	proceseaza(L),
 	L == [end_of_file],
 	nl.
@@ -604,7 +605,7 @@ incarca_reguli:-
 */
 proceseaza([end_of_file]):- !.
 proceseaza(L):-
-	trad(R,L,[]),% TODO: predicat nedefinit
+	trad(R,L,[]),
 	assertz(R),
 	!.
 
@@ -727,7 +728,7 @@ propoz(av(Atr, da)) -->
 	Descriere:
 */
 citeste_linie([Cuv|Lista_cuv]):-
-	get0(Car),
+	get_code(Car),
 	citeste_cuvant(Car, Cuv, Car1),
 	rest_cuvinte_linie(Car1, Lista_cuv).
 
@@ -755,7 +756,7 @@ rest_cuvinte_linie(Car, [Cuv|Lista_cuv]):-
 	Descriere:
 */
 citeste_propozitie([Cuv|Lista_cuv]):-
-	get0(Car), citeste_cuvant(Car, Cuv, Car1),
+	get_code(Car), citeste_cuvant(Car, Cuv, Car1),
 	rest_cuvinte_propozitie(Car1, Lista_cuv).
 
 	
@@ -787,7 +788,7 @@ citeste_cuvant(Caracter, Cuvant, Caracter1):-
 	caracter_cuvant(Caracter),
 	!,
 	name(Cuvant, [Caracter]),
-	get0(Caracter1).
+	get_code(Caracter1).
 citeste_cuvant(Caracter, Numar, Caracter1):-
 	caracter_numar(Caracter),
 	!,
@@ -813,7 +814,7 @@ citeste_tot_numarul(Caracter, Numar, Caracter1):-
 	Descriere:
 */
 determina_lista(Lista, Caracter1):-
-	get0(Caracter),
+	get_code(Caracter),
 	(caracter_numar(Caracter),
 	determina_lista(Lista1, Caracter1),
 	append([Caracter], Lista1, Lista);
@@ -861,7 +862,7 @@ citeste_cuvant(Caracter, Cuvant, Caracter1):-
 	pana_la_urmatorul_apostrof(Lista_caractere),
 	L = [Caracter|Lista_caractere],
 	name(Cuvant, L),
-	get0(Caracter1).
+	get_code(Caracter1).
 
 	
 	
@@ -871,7 +872,7 @@ citeste_cuvant(Caracter, Cuvant, Caracter1):-
 	Descriere:
 */
 pana_la_urmatorul_apostrof(Lista_caractere):-
-	get0(Caracter),
+	get_code(Caracter),
 	(Caracter == 39,
 	Lista_caractere=[Caracter];
 	Caracter \== 39,
@@ -903,7 +904,7 @@ citeste_cuvant(Caracter, Cuvant, Caracter1):-
 	Descriere:
 */
 citeste_intreg_cuvantul(Lista_Caractere, Caracter1):-
-	get0(Caracter),
+	get_code(Caracter),
 	(caractere_in_interiorul_unui_cuvant(Caracter),
 	((Caracter > 64, Caracter < 91),
 	!,
@@ -923,7 +924,7 @@ citeste_intreg_cuvantul(Lista_Caractere, Caracter1):-
 	Descriere:
 */
 citeste_cuvant(_, Cuvant, Caracter1):-
-	get0(Caracter),
+	get_code(Caracter),
 	citeste_cuvant(Caracter, Cuvant, Caracter1).
 
 	
