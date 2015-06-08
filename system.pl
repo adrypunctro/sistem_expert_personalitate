@@ -619,15 +619,15 @@ proceseaza(L):-
 	Descriere:
 		Predicat folosit pentru traducerea unei fraze valide din baza de cunostinte in formatul intern al Prologului.
 */
-trad(scop(X)) -->
-	[scopul, este, X].
-trad(scop(X)) -->
-	[scopul, X].
-trad(interogabil(Atr,M,P)) -->
+trad(scop(X)) -->% Pentru scop
+	[scop, este, X].
+trad(scop(X)) -->% Pentru scop
+	[scop, X].
+trad(interogabil(Atr,M,P)) -->% pentru intrebari
 	[intreaba,Atr],
 	lista_optiuni(M),
 	afiseaza(Atr,P).
-trad(regula(N, premise(Daca), concluzie(Atunci,F))) -->
+trad(regula(N, premise(Daca), concluzie(Atunci,F))) -->% Pentru reguli
 	identificator(N),
 	daca(Daca),
 	atunci(Atunci,F).
@@ -659,9 +659,9 @@ lista_de_optiuni([Element|T]) -->
 	
 
 /* afiseaza ------------------------------------------------------------------------
-	Specificatie predicat: lista_optiuni(?)
-	Parametrii:
-	Descriere:
+	Specificatie predicat: afiseaza() TODO: de scris speficicatie
+	Parametrii: TODO: de scris ce fac parametrii
+	Descriere: TODO: de scris descrierea
 */
 afiseaza(_, P) -->
 	[afiseaza, P].
@@ -671,22 +671,22 @@ afiseaza(P, P) -->
 	
 	
 /* identificator ------------------------------------------------------------------------
-	Specificatie predicat: lista_optiuni(?)
-	Parametrii:
-	Descriere:
+	Specificatie predicat: identificator(+N)
+	Parametrii: N - este un intreg pozitiv ce identifica in mod unic regula
+	Descriere: Parseaza regula si indentificatorul ei
 */
 identificator(N) -->
-	[regula, N].
+	[rg, N].
 
 	
 	
 /* daca ------------------------------------------------------------------------
-	Specificatie predicat: lista_optiuni(?)
-	Parametrii:
-	Descriere:
+	Specificatie predicat: daca() TODO: de scris speficicatie
+	Parametrii: TODO: de scris ce fac parametrii
+	Descriere: parseaza concluzia
 */
 daca(Daca) -->
-	[daca],
+	[conditii],
 	lista_premise(Daca).
 
 	
@@ -732,6 +732,8 @@ propoz(not av(Atr, da)) -->
 	[not, Atr].
 propoz(av(Atr, Val)) -->
 	[Atr, este, Val].
+propoz(av(Atr, Val)) -->
+	[Atr, e, egal, cu, Val].
 propoz(av(Atr, da)) -->
 	[Atr].
 
@@ -771,7 +773,8 @@ rest_cuvinte_linie(Car, [Cuv|Lista_cuv]):-
 	Descriere:
 */
 citeste_propozitie([Cuv|Lista_cuv]):-
-	get_code(Car), citeste_cuvant(Car, Cuv, Car1),
+	get_code(Car),
+	citeste_cuvant(Car, Cuv, Car1),
 	rest_cuvinte_propozitie(Car1, Lista_cuv).
 
 	
@@ -784,7 +787,7 @@ citeste_propozitie([Cuv|Lista_cuv]):-
 rest_cuvinte_propozitie(-1, []):-
 	!.
 rest_cuvinte_propozitie(Car, []):-
-	Car == 46,
+	Car == 46,% .
 	!.
 rest_cuvinte_propozitie(Car, [Cuv1|Lista_cuv]):-
 	citeste_cuvant(Car, Cuv1, Car1),
@@ -800,7 +803,7 @@ rest_cuvinte_propozitie(Car, [Cuv1|Lista_cuv]):-
 citeste_cuvant(-1, end_of_file, -1):-
 	!.
 citeste_cuvant(Caracter, Cuvant, Caracter1):-
-	caracter_cuvant(Caracter),
+	caracter_cuvant(Caracter),% verifica daca este , ; : ? ! . ) (
 	!,
 	name(Cuvant, [Caracter]),
 	get_code(Caracter1).
@@ -872,7 +875,7 @@ lungime([_|T],L):-
 	Descriere: 39 este codul ASCII pentru '
 */
 citeste_cuvant(Caracter, Cuvant, Caracter1):-
-	Caracter == 39,
+	Caracter == 39,% '
 	!,
 	pana_la_urmatorul_apostrof(Lista_caractere),
 	L = [Caracter|Lista_caractere],
@@ -888,25 +891,25 @@ citeste_cuvant(Caracter, Cuvant, Caracter1):-
 */
 pana_la_urmatorul_apostrof(Lista_caractere):-
 	get_code(Caracter),
-	(Caracter == 39,
+	(Caracter == 39,% '
 	Lista_caractere=[Caracter];
-	Caracter \== 39,
+	Caracter \== 39,% '
 	pana_la_urmatorul_apostrof(Lista_caractere1),
 	Lista_caractere=[Caracter|Lista_caractere1]).
 
 	
 
 /* citeste_cuvant ------------------------------------------------------------------------
-	Specificatie predicat: lista_optiuni(?)
+	Specificatie predicat: citeste_cuvant(?)
 	Parametrii:
 	Descriere:
 */
 citeste_cuvant(Caracter, Cuvant, Caracter1):-
 	caractere_in_interiorul_unui_cuvant(Caracter),
 	!,
-	((Caracter > 64, Caracter < 91),
+	((Caracter > 64, Caracter < 91),% [A-Z]
 	!,
-	Caracter_modificat is Caracter+32;
+	Caracter_modificat is Caracter+32;% transforma in lowercase
 	Caracter_modificat is Caracter),
 	citeste_intreg_cuvantul(Caractere, Caracter1),
 	name(Cuvant, [Caracter_modificat|Caractere]).
@@ -914,7 +917,7 @@ citeste_cuvant(Caracter, Cuvant, Caracter1):-
 
 	
 /* citeste_intreg_cuvantul ------------------------------------------------------------------------
-	Specificatie predicat: lista_optiuni(?)
+	Specificatie predicat: citeste_intreg_cuvantul(?)
 	Parametrii:
 	Descriere:
 */
@@ -947,31 +950,31 @@ citeste_cuvant(_, Cuvant, Caracter1):-
 /* caracter_cuvant ------------------------------------------------------------------------
 	Specificatie predicat: lista_optiuni(?)
 	Parametrii:
-	Descriere:
+	Descriere: am specificat codurile ASCII pentru , ; : ? ! . ) (
 */
 caracter_cuvant(C):-
-	member(C, [44, 59, 58, 63, 33, 46, 41, 40]).
+	member(C, [44, 59, 63, 33, 46, 41, 40]).
 	
 
 	
 /* caractere_in_interiorul_unui_cuvant ------------------------------------------------------------------------
 	Specificatie predicat: lista_optiuni(?)
 	Parametrii:
-	Descriere: am specificat codurile ASCII pentru , ; : ? ! . ) (
+	Descriere:
 */
 caractere_in_interiorul_unui_cuvant(C):-
-	C > 64, C < 91;
-	C > 47, C < 58;
-	C == 45;
-	C == 95;
-	C > 96, C < 123.
+	C > 64, C < 91;% [A-Z]
+	C > 47, C < 58;% [0-9]
+	C == 45;% -
+	C == 95;% _
+	C > 96, C < 123.% [a-z]
 
 	
 	
 /* caracter_numar ------------------------------------------------------------------------
 	Specificatie predicat: lista_optiuni(?)
 	Parametrii:
-	Descriere:
+	Descriere: interval [0-9]
 */
 caracter_numar(C):-
-	C < 58, C >= 48.
+	C >= 48, C < 58.
