@@ -1,16 +1,22 @@
-scopul este loc_concediu.
+scop::loc_concediu.
 
-regula 1
-daca buget_disponibil este redus
-atunci loc_concediu este in_romania fc 90.
+rg::1
+conditii={
+	buget_disponibil e egal cu redus
+}
+atunci loc_concediu e egal cu in_romania fc:90.
 
-regula 2
-daca buget_disponibil este mediu
-atunci loc_concediu este in_romania fc 70.
+rg::2
+conditii={
+	buget_disponibil e egal cu mediu
+}
+atunci loc_concediu e egal cu in_romania fc:70.
 
-regula 3
-daca buget_disponibil este mare
-atunci loc_concediu este in_romania fc 50.
+rg::3
+conditii={
+	buget_disponibil e egal cu mare
+}
+atunci loc_concediu e egal cu in_romania fc:50.
 
 intreaba buget_disponibil
 optiuni (redus mediu mare)
