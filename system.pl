@@ -54,6 +54,72 @@ pornire:-
 	executa([H|T]),
 	H == iesire.
 
+	
+	
+/* scrie_lista ------------------------------------------------------------------------
+	Specificatie predicat: executa TODO: parametrii
+	Descriere: TODO: descriere
+*/
+scrie_lista([]):-
+	nl.
+scrie_lista([H|T]):-
+	write(H),
+	tab(1),
+	scrie_lista(T).
+
+	
+
+/* afiseaza_fapte ------------------------------------------------------------------------
+	Specificatie predicat: executa TODO: parametrii
+	Descriere: TODO: descriere
+*/
+afiseaza_fapte:-
+	write('Fapte existente in baza de cunostinte:'),
+	nl,
+	nl,
+	write(' (Atribut, valoare) '),
+	nl,
+	nl,
+	listeaza_fapte,
+	nl.
+	
+	
+	
+/* listeaza_fapte ------------------------------------------------------------------------
+	Specificatie predicat: executa TODO: parametrii
+	Descriere: TODO: descriere
+*/
+listeaza_fapte:-
+	fapt(av(Atr,Val), FC, _),
+	write('('),
+	write(Atr),
+	write(','),
+	write(Val),
+	write(')'),
+	write(','),
+	write(' certitudine '),
+	FC1 is integer(FC),
+	write(FC1),
+	nl,
+	fail.
+listeaza_fapte.
+
+
+
+/* lista_float_int ------------------------------------------------------------------------
+	Specificatie predicat: executa TODO: parametrii
+	Descriere: TODO: descriere
+*/
+lista_float_int([],[]).
+lista_float_int([Regula|Reguli],[Regula1|Reguli1]):-
+	(Regula \== utiliz,
+	Regula1 is integer(Regula);
+	Regula == utiliz,
+	Regula1 = Regula),
+	lista_float_int(Reguli, Reguli1).
+
+	
+
 
 
 /* executa ------------------------------------------------------------------------
@@ -79,7 +145,7 @@ executa([afisare_fapte]):-
 executa([cum|L]):-
 	cum(L),
 	!.
-executa([iesite]):-
+executa([iesire]):-
 	!.
 executa([_|_]):-
 	write('Comanda incorecta! '),
@@ -566,3 +632,330 @@ trad('Eroare la parsare'-L,L,_).
 
 
 
+/* lista_optiuni ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+lista_optiuni(M) -->
+	[optiuni,'('],
+	lista_de_optiuni(M).
+
+	
+	
+/* lista_optiuni ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+lista_de_optiuni([Element]) -->
+	[Element, ')'].
+lista_de_optiuni([Element|T]) -->
+	[Element], lista_de_optiuni(T).
+	
+	
+
+/* afiseaza ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+afiseaza(_, P) -->
+	[afiseaza, P].
+afiseaza(P, P) -->
+	[].
+
+	
+	
+/* identificator ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+identificator(N) -->
+	[daca],
+	lista_premise(Daca).
+
+
+	
+/* lista_premise ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+lista_premise([Daca]) -->
+	propoz(Daca),
+	[atunci].
+lista_premise([Prima|Celelalte]) -->
+	propoz(Prima), [si], lista_premise(Celelalte).
+lista_premise([Prima|Celelalte]) -->
+	propoz(Prima), [','], lista_premise(Celelalte).
+
+	
+	
+/* atunci ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+atunci(Atunci, FC) -->
+	propoz(Atunci),
+	[fc],
+	[FC].
+atunci(Atunci, 100) -->
+	propoz(Atunci).
+
+	
+
+/* propoz ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+propoz(not av(Atr, da)) -->
+	[not, Atr].
+propoz(av(Atr, Val)) -->
+	[Atr, este, Val].
+propoz(av(Atr, da)) -->
+	[Atr].
+
+	
+	
+/* citeste_linie ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+citeste_linie([Cuv|Lista_cuv]):-
+	get0(Car),
+	citeste_cuvant(Car, Cuv, Car1),
+	rest_cuvinte_linie(Car1, Lista_cuv).
+
+
+	
+/* rest_cuvinte_linie ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere: -1 este codul ASCII pentru EOF
+*/
+rest_cuvinte_linie(-1, []):-
+	!.
+rest_cuvinte_linie(Car, []):-
+	(Car == 13; Car == 10),
+	!.
+rest_cuvinte_linie(Car, [Cuv|Lista_cuv]):-
+	citeste_cuvant(Car, Cuv1, Car1),
+	rest_cuvinte_linie(Car1, Lista_cuv).
+
+	
+
+/* citeste_propozitie ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+citeste_propozitie([Cuv|Lista_cuv]):-
+	get0(Car), citeste_cuvant(Car, Cuv, Car1),
+	rest_cuvinte_propozitie(Car1, Lista_cuv).
+
+	
+	
+/* rest_cuvinte_propozitie ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+rest_cuvinte_propozitie(-1, []):-
+	!.
+rest_cuvinte_propozitie(Car, []):-
+	Car == 46,
+	!.
+rest_cuvinte_propozitie(Car, [Cuv1|Lista_cuv]):-
+	citeste_cuvant(Car, Cuv1, Car1),
+	rest_cuvinte_propozitie(Car1, Lista_cuv).
+
+	
+	
+/* citeste_cuvant ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+citeste_cuvant(-1, end_of_file, -1):-
+	!.
+citeste_cuvant(Caracter, Cuvant, Caracter1):-
+	caracter_cuvant(Caracter),
+	!,
+	name(Cuvant, [Caracter]),
+	get0(Caracter1).
+citeste_cuvant(Caracter, Numar, Caracter1):-
+	caracter_numar(Caracter),
+	!,
+	citeste_tot_numarul(Caracter, Numar, Caracter1).
+
+	
+	
+/* citeste_tot_numarul ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/	
+citeste_tot_numarul(Caracter, Numar, Caracter1):-
+	determina_lista(Lista1, Caracter1),
+	append([Caracter], Lista1, Lista),
+	transforma_lista_numar(Lista, Numar).
+	
+	
+	
+/* determina_lista ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+determina_lista(Lista, Caracter1):-
+	get0(Caracter),
+	(caracter_numar(Caracter),
+	determina_lista(Lista1, Caracter1),
+	append([Caracter], Lista1, Lista);
+	\+(caracter_numar(Caracter)),
+	Lista = [],
+	Caracter1 = Caracter).
+	
+
+	
+/* transforma_lista_numar ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+transforma_lista_numar([], 0).
+transforma_lista_numar([H|T], N):-
+	transforma_lista_numar(T, NN),
+	lungime(T, L),
+	Aux is exp(10, L),
+	HH is H-48,
+	N is HH*Aux+NN.
+
+	
+
+/* lungime ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+lungime([],0).
+lungime([_|T],L):-
+	lungime(T,L1),
+	L is L1+1.
+
+	
+
+/* citeste_cuvant ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere: 39 este codul ASCII pentru '
+*/
+citeste_cuvant(Caracter, Cuvant, Caracter1):-
+	Caracter == 39,
+	!,
+	pana_la_urmatorul_apostrof(Lista_caractere),
+	L = [Caracter|Lista_caractere],
+	name(Cuvant, L),
+	get0(Caracter1).
+
+	
+	
+/* pana_la_urmatorul_apostrof ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+pana_la_urmatorul_apostrof(Lista_caractere):-
+	get0(Caracter),
+	(Caracter == 39,
+	Lista_caractere=[Caracter];
+	Caracter \== 39,
+	pana_la_urmatorul_apostrof(Lista_caractere1),
+	Lista_caractere=[Caracter|Lista_caractere1]).
+
+	
+
+/* citeste_cuvant ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+citeste_cuvant(Caracter, Cuvant, Caracter1):-
+	caractere_in_interiorul_unui_cuvant(Caracter),
+	!,
+	((Caracter > 64, Caracter < 91),
+	!,
+	Caracter_modificat is Caracter+32;
+	Caracter_modificat is Caracter),
+	citeste_intreg_cuvantul(Caractere, Caracter1),
+	name(Cuvant, [Caracter_modificat|Caractere]).
+
+
+	
+/* citeste_intreg_cuvantul ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+citeste_intreg_cuvantul(Lista_Caractere, Caracter1):-
+	get0(Caracter),
+	(caractere_in_interiorul_unui_cuvant(Caracter),
+	((Caracter > 64, Caracter < 91),
+	!,
+	Caracter_modificat is Caracter+32;
+	Caracter_modificat is Caracter),
+	citeste_intreg_cuvantul(Lista_Caractere1, Caracter1),
+	Lista_Caractere = [Caracter_modificat|Lista_Caractere1];
+	\+(caractere_in_interiorul_unui_cuvant(Caracter)),
+	Lista_Caractere=[],
+	Caracter1=Caracter).
+	
+	
+	
+/* citeste_cuvant ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+citeste_cuvant(_, Cuvant, Caracter1):-
+	get0(Caracter),
+	citeste_cuvant(Caracter, Cuvant, Caracter1).
+
+	
+	
+/* caracter_cuvant ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+caracter_cuvant(C):-
+	member(C, [44, 59, 58, 63, 33, 46, 41, 40]).
+	
+
+	
+/* caractere_in_interiorul_unui_cuvant ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere: am specificat codurile ASCII pentru , ; : ? ! . ) (
+*/
+caractere_in_interiorul_unui_cuvant(C):-
+	C > 64, C < 91;
+	C > 47, C < 58;
+	C == 45;
+	C == 95;
+	C > 96, C < 123.
+
+	
+	
+/* caracter_numar ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+caracter_numar(C):-
+	C < 58, C >= 48.
