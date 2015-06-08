@@ -65,7 +65,7 @@ scrie_lista([]):-
 	nl.
 scrie_lista([H|T]):-
 	write(H),
-	tab(1),
+	write(' '),
 	scrie_lista(T).
 
 	
@@ -201,7 +201,7 @@ afiseaza_scop(_):-
 scrie_scop(av(Atr,Val),FC):-
 	transformare(av(Atr,Val), X),
 	scrie_lista(X),
-	tab(2),
+	write('  '),
 	write(' '),
 	write('factorul de certitudine este '),
 	FC1 is integer(FC),
@@ -340,7 +340,7 @@ afis_regula(N):-
 scrie_lista_premise([]).
 scrie_lista_premise([H|T]):-
 	transformare(H,H_tr),
-	tab(5),
+	write('     '),
 	scrie_lista(H_tr),
 	scrie_lista_premise(T).
 
@@ -576,6 +576,8 @@ incarca:-
 incarca(F):-
 	retractall(interogat(_)),
 	retractall(fapt(_,_,_)),
+	retractall(scop(_)),
+	retractall(interogabil(_,_,_)),
 	retractall(regula(_,_,_)),
 	see(F),
 	incarca_reguli,
@@ -674,9 +676,18 @@ afiseaza(P, P) -->
 	Descriere:
 */
 identificator(N) -->
+	[regula, N].
+
+	
+	
+/* daca ------------------------------------------------------------------------
+	Specificatie predicat: lista_optiuni(?)
+	Parametrii:
+	Descriere:
+*/
+daca(Daca) -->
 	[daca],
 	lista_premise(Daca).
-
 
 	
 /* lista_premise ------------------------------------------------------------------------
@@ -688,9 +699,13 @@ lista_premise([Daca]) -->
 	propoz(Daca),
 	[atunci].
 lista_premise([Prima|Celelalte]) -->
-	propoz(Prima), [si], lista_premise(Celelalte).
+	propoz(Prima),
+	[si],
+	lista_premise(Celelalte).
 lista_premise([Prima|Celelalte]) -->
-	propoz(Prima), [','], lista_premise(Celelalte).
+	propoz(Prima),
+	[','],
+	lista_premise(Celelalte).
 
 	
 	
