@@ -1,42 +1,117 @@
-scop::loc_concediu.
+scop::ocupatie.
 
-rg::1
+rg::1011
 conditii={
-	buget_disponibil e egal cu redus
+    pasiune_tehnologie e egal cu pasionat,
+    sociabil[fals],
+    loc_munca_relaxat,
+    preferinta_calatorii[fals],
+    loc_munca_riscant[fals],
+    nivel_plata e egal cu mediu,
+    discipline_preferate e egal cu reale,
+    creativ
 }
-atunci in_romania fc:90.
+atunci
+    categorie_IT e egal cu da fc:80.
 
-rg::2
+rg::2011
 conditii={
-	buget_disponibil e egal cu mediu
+    categorie_IT,
+    lungime_program e egal cu full_time,
+    preferinta_echipa e egal cu echipa_mica
 }
-atunci in_romania fc:70.
+atunci
+    ocupatie e egal cu 'IT - Programator' fc:90.
 
-rg::3
+rg::2012
 conditii={
-	buget_disponibil e egal cu mare
+    categorie_IT,
+    nivel_educatie e egal cu nimic,
+    nivel_plata e egal cu mic
 }
-atunci in_strainatate fc:50.
+atunci
+    ocupatie e egal cu 'IT - Tester' fc:90.
 
-rg::4
+rg::2013
 conditii={
-	in_romania,
-	buget_disponibil e egal cu redus
+    categorie_IT,
+    lider,
+    prefera_responsabilitate
 }
-atunci loc_concediu e egal cu busteni fc:70.
+atunci
+    ocupatie e egal cu 'IT - Administrator' fc:90.
 
-rg::5
+rg::2014
 conditii={
-	la_mare[fals],
-	buget_disponibil e egal cu redus
+    categorie_IT,
+    lungime_program e egal cu la_alegere,
+    preferinta_echipa e egal cu singur
 }
-atunci loc_concediu e egal cu galati fc:70.
+atunci
+    ocupatie e egal cu 'IT - Freelancer' fc:90.
 
 
-??? buget_disponibil !input
-raspunsuri posibile: redus; peste_2_ore;
-intrebare 'Cate ore petrece zilnic jucand jocuri pe calculator?'.
+??? lungime_program
+raspunsuri posibile: full_time; incert; la_alegere; 
+intrebare 'Ce fel de program doriti?'.
 
-??? la_mare
+??? pasiune_tehnologie
+raspunsuri posibile: nu; pasionat; 
+intrebare 'Sunteti interesat de tehnologie si IT?'.
+
+??? stare_fizica
+raspunsuri posibile: slaba; normala; buna;
+intrebare 'Care este starea voastra fizica?'.
+
+??? preferinta_echipa
+raspunsuri posibile: singur; echipa_mica; echipa_mare;
+intrebare 'Preferati sa lucrati in echipa?'.
+
+??? preferinta_outdoor
 raspunsuri posibile: da; nu;
-intrebare 'La mare?'.
+intrebare 'Preferati sa lucrati in natura?'.
+
+??? sociabil
+raspunsuri posibile: da; nu;
+intrebare 'Va place sa interactionati cu publicul?'.
+
+??? nivel_educatie
+raspunsuri posibile: nimic; liceu; facultate;
+intrebare 'Care va este nivelul de educatie?'.
+
+??? loc_munca_relaxat
+raspunsuri posibile: da; nu;
+intrebare 'Doriti sa aveti un loc de munca relaxat?'.
+
+??? preferinta_calatorii
+raspunsuri posibile: da; nu;
+intrebare 'Va place sa calatoriti?'.
+
+??? preferinta_responsabilitate
+raspunsuri posibile: da; nu;
+intrebare 'Doriti un grad mare de responsabilitate la locul de munca?'.
+
+??? situatii_neprevazute
+raspunsuri posibile: da; nu;
+intrebare 'Va place sa rezolvati situatii neprevazute?'.
+
+??? loc_munca_riscant
+raspunsuri posibile: da; nu;
+intrebare 'Doriti un loc de munca riscant?'.
+
+??? nivel_plata
+raspunsuri posibile: mic; mediu; mare;
+intrebare 'Ce nivel de salariu doriti?'.
+
+??? discipline_preferate
+raspunsuri posibile: umane; reale;
+intrebare 'Preferati discipline reale sau umane?'.
+
+??? creativ
+raspunsuri posibile: da; nu;
+intrebare 'Va considerati o persoana creativa?'.
+
+??? lider
+raspunsuri posibile: da; nu;
+intrebare 'Ati prefera o pozitie de leadership?'.
+
