@@ -493,7 +493,7 @@ interogheaza(Atr, Mesaj, [da,nu], Istorie, 0):-% pentru intrebarea cu raspuns da
 	!,
 	write(Mesaj),
 	nl,
-	de_la_utiliz(X, Istorie, [da, nu]),
+	de_la_utiliz(X, Istorie, [da, nu], 0),
 	det_val_fc(X, Val, FC),
 	scrie_fis_log(Atr,X),% scrie raspunsul in fisierul log.txt
 	asserta(fapt(av(Atr, Val), FC, [utiliz])).
