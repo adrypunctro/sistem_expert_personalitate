@@ -37,12 +37,35 @@ not(P):-
 not(_).
 
 
+
+/* Config ------------------------------------------------------------------------
+	Descriere: Setarile sistemului
+	Atribute:
+		- root_dir este directorul din care ruleaza programul (working directory)
+		- cale_fis_log este fisierul in care sunt salvate raspunsurile
+		- cale_fis_dem este fisierul in care sunt salvate demonstratiile
+		- cale_fis_solutii este fisierul in care sunt salvate solutiile
+*/
+config(root_dir, 'C:/Users/Simionescu Adrian/Documents/Old Windows/FMI UNIBUC/CTI/anul III/Sem II/Sisteme Expert/sistem_expert_personalitate').
+config(cale_fis_log, 'fisiere_log/log.txt').
+config(cale_fis_dem, 'fisiere_log/demonstratii.txt').
+config(cale_fis_sol, NumeFisier):-
+	now(Time),
+	number_chars(Time, TimeChars),
+	atom_chars(TimeAtom, TimeChars),
+    atom_concat(TimeAtom,'.txt', TimeExt),
+	atom_concat('fisiere_log/solutii_posibile_', TimeExt, NumeFisier).
+
+
+
 /* pornire **************************************************************************
 	Specificatie predicat: pornire
 	Descriere:
 		Este principalul predicat al shell-ului. Acesta determina un ciclu de executie incarcand optiunile: incarca, consulta, reinitiaza, afisare_fapte, iesire, cum.
 */
 pornire:-
+	config(root_dir, CaleFisier),
+	current_directory(_, CaleFisier),% seteaza directorul de lucru
 	retractall(interogat(_)),
 	retractall(fapt(_,_,_)),
 	repeat,
@@ -124,8 +147,8 @@ lista_float_int([Regula|Reguli],[Regula1|Reguli1]):-
 
 
 /* executa ------------------------------------------------------------------------
-	Specificatie predicat: executa TODO: parametrii
-	Descriere: TODO: descriere
+	Specificatie predicat: executa(+Comanda)
+	Descriere: Predicatul executa comanda primita de la utilizator.
 */
 executa([incarca]):-
 	incarca,
@@ -134,6 +157,7 @@ executa([incarca]):-
 	write('Fisierul dorit a fost incarcat'),
 	nl.
 executa([consulta]):-
+	fisiere_log,
 	scopuri_princ,
 	!.
 executa([reinitiaza]):-
@@ -152,8 +176,33 @@ executa([_|_]):-
 	write('Comanda incorecta! '),
 	nl.
 
+	
+
+/* fisiere_log ------------------------------------------------------------------------
+	Specificatie predicat: scopuri_princ TODO: parametrii
+	Descriere: TODO: descriere
+*/
+fisiere_log:-
+	(directory_exists('fisiere_log');
+	make_directory('fisiere_log')),% creaza directorul daca nu exista
+	config(cale_fis_log, CaleFisierLog),
+	resetare_fisier(CaleFisierLog),
+	config(cale_fis_dem, CaleFisierDem),
+	resetare_fisier(CaleFisierDem),
+	config(cale_fis_sol, CaleFisierSol),
+	resetare_fisier(CaleFisierSol).
 
 
+
+/* resetare_fisier ------------------------------------------------------------------------
+	Specificatie predicat: resetare_fisier(+Nume)
+	Descriere: Sterge continutul dintr-un fisier.
+*/
+resetare_fisier(Nume):-
+	open(Nume,write,Stream),
+	close(Stream).
+	
+	
 /* scopuri_princ ------------------------------------------------------------------------
 	Specificatie predicat: scopuri_princ TODO: parametrii
 	Descriere: TODO: descriere
