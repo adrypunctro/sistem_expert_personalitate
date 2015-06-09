@@ -22,7 +22,7 @@
 :- dynamic fapt/3.
 :- dynamic interogat/1.
 :- dynamic scop/1.
-:- dynamic interogabil/3.
+:- dynamic interogabil/4.
 :- dynamic regula/3.
 :- dynamic config/2.
 
@@ -69,7 +69,7 @@ pornire:-
 	repeat,
 	write('Introduceti una din urmatoarele optiuni: '),
 	nl, nl,
-	write(' (Incarca Consulta Reinitiaza Afiseare_fapte Cum Iesire) '),
+	write(' (Incarca Consulta Reinitiaza Afisare_fapte Cum Iesire) '),
 	nl, nl,
 	write('|: '),
 	citeste_linie([H|T]),
@@ -324,13 +324,13 @@ fg(Scop, FC, _):-
 	
 
 /* pot_interoga ------------------------------------------------------------------------
-	Specificatie predicat: scopuri_princ TODO: parametrii
+	Specificatie predicat: pot_interoga
 	Descriere: TODO: descriere
 */
 pot_interoga(av(Atr,_), Istorie):-
 	not interogat(av(Atr, _)),
-	interogabil(Atr, Optiuni, Mesaj),
-	interogheaza(Atr, Mesaj, Optiuni, Istorie),
+	interogabil(Atr, Optiuni, Mesaj, Custom),
+	interogheaza(Atr, Mesaj, Optiuni, Istorie, Custom),
 	nl,
 	asserta(interogat(av(Atr,_))).
 
@@ -473,10 +473,23 @@ scrie_fis_log(Atr, [Val|_]):-
 	
 
 /* interogheaza ------------------------------------------------------------------------
-	Specificatie predicat: interogheaza(+Atr, +Mesaj, +[da,nu], Istorie)
+	Specificatie predicat: interogheaza(+Atr, +Mesaj, +Optiuni, +Istorie, +Custom)
+	Parametrii:
+		- Atr este identificatorul intrebarii
+		- Mesajul este intrebarea
+		- Optiuni este o lista cu optiunile
+		- Custom este o variabila bool (val 0 sau 1) care spune daca intrebarea accepta raspuns custom
 	Descriere: Predicatul interogheaza utilizatorul. Ii afiseaza intrebarea si proceseaza raspunsul.
 */
-interogheaza(Atr, Mesaj, [da,nu], Istorie):-
+interogheaza(Atr, Mesaj, Optiuni, Istorie, 1):-% pentru intrebarea cu raspuns custom
+	!,
+	write(Mesaj),
+	write(' CUSTOM'),
+	nl,
+	citeste_opt(VLista, Optiuni, Istorie, 1),% citire custom
+	scrie_fis_log(Atr,VLista),% scrie raspunsul in fisierul log.txt
+	assert_fapt(Atr, VLista).
+interogheaza(Atr, Mesaj, [da,nu], Istorie, 0):-% pentru intrebarea cu raspuns da/nu
 	!,
 	write(Mesaj),
 	nl,
@@ -484,10 +497,10 @@ interogheaza(Atr, Mesaj, [da,nu], Istorie):-
 	det_val_fc(X, Val, FC),
 	scrie_fis_log(Atr,X),% scrie raspunsul in fisierul log.txt
 	asserta(fapt(av(Atr, Val), FC, [utiliz])).
-interogheaza(Atr, Mesaj, Optiuni, Istorie):-
+interogheaza(Atr, Mesaj, Optiuni, Istorie, 0):-% pentru intreb. cu raspuns din optiuni
 	write(Mesaj),
 	nl,
-	citeste_opt(VLista, Optiuni, Istorie),
+	citeste_opt(VLista, Optiuni, Istorie, 0),
 	scrie_fis_log(Atr,VLista),% scrie raspunsul in fisierul log.txt
 	assert_fapt(Atr, VLista).
 
@@ -497,29 +510,49 @@ interogheaza(Atr, Mesaj, Optiuni, Istorie):-
 	Specificatie predicat: citeste_opt
 	Descriere:
 */
-citeste_opt(X, Optiuni, Istorie):-
+citeste_opt(X, Optiuni, Istorie, 0):-% citire normala
 	append(['('], Optiuni, Opt1),
 	append(Opt1,[')'],Opt),
 	scrie_lista(Opt),
-	de_la_utiliz(X, Istorie, Optiuni).
+	de_la_utiliz(X, Istorie, Optiuni, 0).
+citeste_opt(X, Optiuni, Istorie, 1):-% citire custom
+	de_la_utiliz(X, Istorie, Optiuni, 1).
 	
 	
 	
 /* de_la_utiliz ------------------------------------------------------------------------
-	Specificatie predicat: transformare
+	Specificatie predicat: de_la_utiliz(+X, +Istorie, +Lista_opt)
 	Descriere:
 */
-de_la_utiliz(X, Istorie, Lista_opt):-
+de_la_utiliz(X, Istorie, Lista_opt, 0):-
 	repeat,
 	write(': '),
 	citeste_linie(X),
 	proceseaza_raspuns(X, Istorie, Lista_opt).
+de_la_utiliz(X, Istorie, Lista_opt, 1):-
+	repeat,
+	write(': '),
+	citeste_linie(Xcustom),
+	transforma_custom(Xcustom, X),% transformare raspuns
+	proceseaza_raspuns(X, Istorie, Lista_opt).
 
 	
-		
+	
+/* transforma_custom ------------------------------------------------------------------------
+	Specificatie predicat: transforma_custom(+Xcustom, -X)
+	Descriere: Transforma raspunsul custom intr-o optiune.
+*/
+transforma_custom([Xcustom|_], X):-% TODO: transformarea nu este buna
+	(Xcustom =:= 1, X = atom_chars(deloc));
+	(Xcustom =< 2; X = atom_chars(rar));
+	(Xcustom =< 4; X = atom_chars(mediu));
+	(Xcustom > 4; X = atom_chars(des)).
+	
+	
+	
 /* proceseaza_raspuns ------------------------------------------------------------------------
-	Specificatie predicat: transformare
-	Descriere:
+	Specificatie predicat: proceseaza_raspuns(+Input, +Istorie, +ListaOptiuni)
+	Descriere: Predicatul primeste raspunsul de la utilizator si il proceseaza.
 */
 proceseaza_raspuns([de_ce], Istorie, _):-
 	nl,
@@ -534,8 +567,8 @@ proceseaza_raspuns([X,fc,FC], _, Lista_opt):-
 
 	
 /* assert_fapt ------------------------------------------------------------------------
-	Specificatie predicat: transformare
-	Descriere:
+	Specificatie predicat: assert_fapt()
+	Descriere: Adauga faptele in baza de cunostinte.
 */
 assert_fapt(Atr, [Val,fc,FC]):-
 	!,
@@ -546,7 +579,7 @@ assert_fapt(Atr, [Val]):-
 	
 	
 /* det_val_fc ------------------------------------------------------------------------
-	Specificatie predicat: transformare
+	Specificatie predicat: det_val_fc
 	Descriere:
 */
 det_val_fc([nu],da,-100).
@@ -561,7 +594,7 @@ det_val_fc([Val],Val,100).
 
 
 /* afis_istorie ------------------------------------------------------------------------
-	Specificatie predicat: transformare
+	Specificatie predicat: afis_istorie
 	Descriere:
 */
 afis_istorie([]):-
@@ -578,7 +611,7 @@ afis_istorie([N|T]):-
 
 	
 /* demonstreaza ------------------------------------------------------------------------
-	Specificatie predicat: transformare
+	Specificatie predicat: demonstreaza
 	Descriere:
 */
 demonstreaza(N, ListaPremise, Val_finala, Istorie):-
@@ -588,7 +621,7 @@ demonstreaza(N, ListaPremise, Val_finala, Istorie):-
 	
 	
 /* dem ------------------------------------------------------------------------
-	Specificatie predicat: transformare
+	Specificatie predicat: dem
 	Descriere:
 */
 dem([], Val_finala, Val_finala, _).
@@ -601,7 +634,7 @@ dem([H|T], Val_actuala, Val_finala, Istorie):-
 	
 	
 /* actualizeaza ------------------------------------------------------------------------
-	Specificatie predicat: transformare
+	Specificatie predicat: actualizeaza
 	Descriere:
 */
 actualizeaza(Scop, FC_nou, FC, RegulaN):-
@@ -669,7 +702,7 @@ incarca(F):-
 	retractall(interogat(_)),
 	retractall(fapt(_,_,_)),
 	retractall(scop(_)),
-	retractall(interogabil(_,_,_)),
+	retractall(interogabil(_,_,_,_)),
 	retractall(regula(_,_,_)),
 	see(F),
 	incarca_reguli,
@@ -740,11 +773,11 @@ trad(scop(X)) -->% Pentru scop
 	[scop, este, X].
 trad(scop(X)) -->% Pentru scop
 	[scop, ':',':',X].
-trad(interogabil(Atr,M,P)) -->% pentru intrebari custom
-	[???, Atr, '!','input'],% TODO trebuie facut sa lucreze separat
+trad(interogabil(Atr,M,P,1)) -->% pentru intrebari custom
+	[???, Atr, '!','input'],
 	lista_optiuni(M),
 	afiseaza(Atr,P).
-trad(interogabil(Atr,M,P)) -->% pentru intrebari
+trad(interogabil(Atr,M,P,0)) -->% pentru intrebari
 	[???, Atr],
 	lista_optiuni(M),
 	afiseaza(Atr,P).
