@@ -34,7 +34,7 @@ atunci loc_concediu e egal cu galati fc:70.
 
 
 ??? buget_disponibil !input
-raspunsuri posibile: zero; peste_2_ore;
+raspunsuri posibile: redus; peste_2_ore;
 intrebare 'Cate ore petrece zilnic jucand jocuri pe calculator?'.
 
 ??? la_mare

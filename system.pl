@@ -24,6 +24,7 @@
 :- dynamic scop/1.
 :- dynamic interogabil/3.
 :- dynamic regula/3.
+:- dynamic config/2.
 
 
 
@@ -46,16 +47,12 @@ not(_).
 		- cale_fis_dem este fisierul in care sunt salvate demonstratiile
 		- cale_fis_solutii este fisierul in care sunt salvate solutiile
 */
-config(root_dir, 'C:/Users/Simionescu Adrian/Documents/Old Windows/FMI UNIBUC/CTI/anul III/Sem II/Sisteme Expert/sistem_expert_personalitate').
-config(cale_fis_log, 'fisiere_log/log.txt').
-config(cale_fis_dem, 'fisiere_log/demonstratii.txt').
-config(cale_fis_sol, NumeFisier):-
-	now(Time),
-	number_chars(Time, TimeChars),
-	atom_chars(TimeAtom, TimeChars),
-    atom_concat(TimeAtom,'.txt', TimeExt),
-	atom_concat('fisiere_log/solutii_posibile_', TimeExt, NumeFisier).
-
+config_init:-
+	assert(config(root_dir, 'C:/Users/Simionescu Adrian/Documents/Old Windows/FMI UNIBUC/CTI/anul III/Sem II/Sisteme Expert/sistem_expert_personalitate')),
+	assert(config(cale_fis_log, 'fisiere_log/log.txt')),
+	assert(config(cale_fis_dem, 'fisiere_log/demonstratii.txt')),
+	genereaza_fis_sol(CaleFisierSol),
+	assert(config(cale_fis_sol, CaleFisierSol)).
 
 
 /* pornire **************************************************************************
@@ -64,6 +61,7 @@ config(cale_fis_sol, NumeFisier):-
 		Este principalul predicat al shell-ului. Acesta determina un ciclu de executie incarcand optiunile: incarca, consulta, reinitiaza, afisare_fapte, iesire, cum.
 */
 pornire:-
+	config_init,
 	config(root_dir, CaleFisier),
 	current_directory(_, CaleFisier),% seteaza directorul de lucru
 	retractall(interogat(_)),
@@ -78,6 +76,19 @@ pornire:-
 	executa([H|T]),
 	H == iesire.
 
+	
+
+/* genereaza_fis_sol ------------------------------------------------------------------------
+	Specificatie predicat: genereaza_fis_sol(-NumeFisier)
+	Descriere: Genereaza nume pentru fisierul solutii
+*/
+genereaza_fis_sol(NumeFisier):-
+	now(Time),
+	number_chars(Time, TimeChars),
+	atom_chars(TimeAtom, TimeChars),
+    atom_concat(TimeAtom,'.txt', TimeExt),
+	atom_concat('fisiere_log/solutii_posibile_', TimeExt, NumeFisier).
+	
 	
 	
 /* scrie_lista ------------------------------------------------------------------------
@@ -185,10 +196,13 @@ executa([_|_]):-
 fisiere_log:-
 	(directory_exists('fisiere_log');
 	make_directory('fisiere_log')),% creaza directorul daca nu exista
+	
 	config(cale_fis_log, CaleFisierLog),
-	resetare_fisier(CaleFisierLog),
+	append_fisier(CaleFisierLog, '=========================='),% TODO: sa fie append la sfarsit
+	
 	config(cale_fis_dem, CaleFisierDem),
 	resetare_fisier(CaleFisierDem),
+	
 	config(cale_fis_sol, CaleFisierSol),
 	resetare_fisier(CaleFisierSol).
 
@@ -199,8 +213,20 @@ fisiere_log:-
 	Descriere: Sterge continutul dintr-un fisier.
 */
 resetare_fisier(Nume):-
-	open(Nume,write,Stream),
-	close(Stream).
+	open(Nume,write,Fisier),
+	close(Fisier).
+	
+
+	
+/* resetare_fisier ------------------------------------------------------------------------
+	Specificatie predicat: resetare_fisier(+Nume)
+	Descriere: Sterge continutul dintr-un fisier.
+*/
+append_fisier(Nume, Val):-
+	open(Nume,append,Fisier),
+	write(Fisier, Val),
+	nl(Fisier),
+	close(Fisier).
 	
 	
 /* scopuri_princ ------------------------------------------------------------------------
@@ -661,9 +687,34 @@ incarca_reguli:-
 	citeste_propozitie(L),
 	proceseaza(L),
 	L == [end_of_file],
-	nl.
+	nl,
+	cauta_solutii_posibile.% cauta valorile pentru scop
 
+	
 
+/* cauta_solutii_posibile ------------------------------------------------------------------------
+	Specificatie predicat: cauta_solutii_posibile
+	Descriere:
+*/
+cauta_solutii_posibile:-
+	scop(Scop),
+	regula(Nr,ListaPremise,concluzie(av(Scop,Sol),_)),
+	scrie_fis_sol(Sol),
+	fail;true.
+
+	
+
+/* cauta_solutii_posibile ------------------------------------------------------------------------
+	Specificatie predicat: scrie_fis_sol(+Sol)
+	Descriere: Adauga solutia in fisierul pentru solutii
+*/
+scrie_fis_sol(Sol):-
+	config(cale_fis_sol, CaleFisierSol),
+	open(CaleFisierSol, append, Fisier),
+	write(Fisier, Sol),
+	nl(Fisier),
+	close(Fisier).
+	
 
 /* proceseaza ------------------------------------------------------------------------
 	Specificatie predicat: proceseaza(+L)
@@ -761,7 +812,7 @@ daca(Daca) -->
 
 	
 /* lista_premise ------------------------------------------------------------------------
-	Specificatie predicat: lista_optiuni(?)
+	Specificatie predicat: lista_premise(?)
 	Parametrii:
 	Descriere:
 */
@@ -780,7 +831,7 @@ lista_premise([Prima|Celelalte]) -->
 	
 	
 /* atunci ------------------------------------------------------------------------
-	Specificatie predicat: lista_optiuni(?)
+	Specificatie predicat: atunci(?)
 	Parametrii:
 	Descriere:
 */
