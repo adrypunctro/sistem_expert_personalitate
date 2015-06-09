@@ -430,10 +430,25 @@ cum_premise([Scop|X]):-
 	cum_premise(X).
 
 	
-
-/* interogheaza ------------------------------------------------------------------------
+	
+/* scrie_fis_log ------------------------------------------------------------------------
 	Specificatie predicat: transformare
 	Descriere:
+*/
+scrie_fis_log(Atr, [Val|_]):-
+	config(cale_fis_log, CaleFisier),
+	open(CaleFisier, append, Fisier),
+	write(Fisier, Atr),
+	write(Fisier, '='),
+	write(Fisier, Val),
+	nl(Fisier),
+	close(Fisier).
+	
+	
+
+/* interogheaza ------------------------------------------------------------------------
+	Specificatie predicat: interogheaza(+Atr, +Mesaj, +[da,nu], Istorie)
+	Descriere: Predicatul interogheaza utilizatorul. Ii afiseaza intrebarea si proceseaza raspunsul.
 */
 interogheaza(Atr, Mesaj, [da,nu], Istorie):-
 	!,
@@ -441,17 +456,19 @@ interogheaza(Atr, Mesaj, [da,nu], Istorie):-
 	nl,
 	de_la_utiliz(X, Istorie, [da, nu]),
 	det_val_fc(X, Val, FC),
+	scrie_fis_log(Atr,X),% scrie raspunsul in fisierul log.txt
 	asserta(fapt(av(Atr, Val), FC, [utiliz])).
 interogheaza(Atr, Mesaj, Optiuni, Istorie):-
 	write(Mesaj),
 	nl,
 	citeste_opt(VLista, Optiuni, Istorie),
+	scrie_fis_log(Atr,VLista),% scrie raspunsul in fisierul log.txt
 	assert_fapt(Atr, VLista).
 
 	
 	
 /* citeste_opt ------------------------------------------------------------------------
-	Specificatie predicat: transformare
+	Specificatie predicat: citeste_opt
 	Descriere:
 */
 citeste_opt(X, Optiuni, Istorie):-
