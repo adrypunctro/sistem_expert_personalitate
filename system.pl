@@ -201,10 +201,10 @@ fisiere_log:-
 	append_fisier(CaleFisierLog, '=========================='),% TODO: sa fie append la sfarsit
 	
 	config(cale_fis_dem, CaleFisierDem),
-	resetare_fisier(CaleFisierDem),
+	resetare_fisier(CaleFisierDem)/*,
 	
 	config(cale_fis_sol, CaleFisierSol),
-	resetare_fisier(CaleFisierSol).
+	resetare_fisier(CaleFisierSol)*/.
 
 
 
