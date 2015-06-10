@@ -1,0 +1,33 @@
+scop::test.
+
+rg::1
+conditii={
+    atr_test e egal cu 1
+}
+atunci
+    test e egal cu 1 fc:100.
+
+rg::2
+conditii={
+    atr_test e egal cu 5
+}
+atunci
+    test e egal cu 2 fc:90.
+
+rg::3
+conditii={
+    atr_test e egal cu 10
+}
+atunci
+    test e egal cu 3 fc:80.
+
+rg::4
+conditii={
+    atr_test e egal cu 9999
+}
+atunci
+    test e egal cu 3 fc:70.
+
+??? atr_test !input
+raspunsuri posibile: 1; 5; 10; 9999; 
+intrebare 'Alegeti un numar (1,5,10,9999)!'.
