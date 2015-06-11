@@ -27,6 +27,35 @@ conditii={
 }
 atunci
     test e egal cu 3 fc:70.
+	
+rg::11
+conditii={
+    atr_test e egal cu 1
+}
+atunci
+    test e egal cu 1 fc:100.
+
+rg::12
+conditii={
+    atr_test e egal cu 2
+}
+atunci
+    test e egal cu 2 fc:90.
+
+rg::13
+conditii={
+    atr_test e egal cu 3
+}
+atunci
+    test e egal cu 3 fc:80.
+
+??? atr_test
+raspunsuri posibile: 1; 2; 3; 
+intrebare 'Alegeti un numar!'.
+
+??? atr_test !input
+raspunsuri posibile: luni; marti; miercuri; joi; vineri; sambata; duminica; 
+intrebare 'Care este ziua dvs preferata?'.
 
 ??? atr_test !input
 raspunsuri posibile: 1; 5; 10; 9999; 
