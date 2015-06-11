@@ -48,8 +48,8 @@ not(_).
 		- cale_fis_sol este fisierul in care sunt salvate solutiile
 */
 config_init:-
-	%assert(config(root_dir, 'C:/Users/Simionescu Adrian/Documents/Old Windows/FMI UNIBUC/CTI/anul III/Sem II/Sisteme Expert/sistem_expert_personalitate')),
-	assert(config(root_dir, 'C:/Users/Acasa/Documents/NetBeansProjects/Interfata Prolog')),
+	assert(config(root_dir, 'C:/Users/Simionescu Adrian/Documents/Old Windows/FMI UNIBUC/CTI/anul III/Sem II/Sisteme Expert/sistem_expert_personalitate')),
+	%assert(config(root_dir, 'C:/Users/Acasa/Documents/NetBeansProjects/Interfata Prolog')),
 	assert(config(cale_fis_log, 'fisiere_log/log.txt')),
 	assert(config(cale_fis_dem, 'fisiere_log/demonstratii.txt')),
 	genereaza_fis_sol(CaleFisierSol),
