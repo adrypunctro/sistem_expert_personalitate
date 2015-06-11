@@ -72,7 +72,7 @@ pornire:-
 	nl, nl,
 	write(' (Incarca Consulta Reinitiaza Afisare_fapte Cum Iesire) '),
 	nl, nl,
-	write('|: '),
+	%write('|: '),
 	citeste_linie([H|T]),
 	executa([H|T]),
 	H == iesire.
@@ -235,9 +235,9 @@ append_fisier(Nume, Val):-
 	Descriere: TODO: descriere
 */
 scopuri_princ:-
-	scop(Scop),
-	determina(Scop),
-	afiseaza_scop(Scop),
+	scop(Atr),
+	determina(Atr),
+	afiseaza_scop(Atr),
 	fail.
 scopuri_princ.
 
@@ -289,7 +289,7 @@ scrie_scop(av(Atr,Val),FC):-
 	Specificatie predicat: realizare_scop(+Scop,+FC,-Istorie) 
 	Parametri: 
 		- Scop are fie forma av(Atr,Val), fie forma not av(Atr,Val); Av este atributul despre care dorim sa aflam informatii la un moment dat si, de obicei, atunci cand acest predicat este folosit, Atr este deja instantiat.
-		- FC reprezinta factorul de incertitudine ce va fi asociat faptului nostru in final.
+		- FC reprezinta factorul de certitudine ce va fi asociat faptului nostru in final.
 		- Istorie retine "istoria" si este folosit pentru a raspunde la intrebarea "de ce?".
 */
 realizare_scop(not Scop, Not_FC, Istorie):-
@@ -516,6 +516,7 @@ citeste_opt(X, Optiuni, Istorie, 0):-% citire normala
 	append(Opt1,[')'],Opt),
 	scrie_lista(Opt),
 	de_la_utiliz(X, Istorie, Optiuni, 0).
+	
 citeste_opt(X, Optiuni, Istorie, 1):-% citire custom
 	de_la_utiliz(X, Istorie, Optiuni, 1).
 	
@@ -530,31 +531,40 @@ de_la_utiliz(X, Istorie, Lista_opt, 0):-
 	write(': '),
 	citeste_linie(X),
 	proceseaza_raspuns(X, Istorie, Lista_opt).
+
 de_la_utiliz(X, Istorie, Lista_opt, 1):-
 	repeat,
 	write(': '),
-	citeste_linie(Xcustom),
-	transforma_custom(Xcustom, X),% transformare raspuns
+	citeste_linie(XCustom),
+	alege_custom(XCustom, Lista_opt, X), % transformare raspuns
+	X \= -1,
 	proceseaza_raspuns(X, Istorie, Lista_opt).
 
 	
-	
+
 /* transforma_custom ------------------------------------------------------------------------
 	Specificatie predicat: transforma_custom(+Xcustom, -X)
 	Descriere: Transforma raspunsul custom intr-o optiune.
 */
 %TODO - verifica daca merge asta
-%alege2(+Lista elemente, +Lista probabilitati, +Random, -Rezultat) - Alege un element in functie de probabilitate.
-%alege2([HE|TE], [HP|TP], Rand, Rez):- if(Rand < HP, 
-										Rez = HE,
-										alege(TE, TP, Rand, Rez)).
-transforma_custom([Xcustom|_], X):-% TODO: transformarea nu este buna
-	(Xcustom =:= 1, X = atom_chars(deloc));
-	(Xcustom =< 2; X = atom_chars(rar));
-	(Xcustom =< 4; X = atom_chars(mediu));
-	(Xcustom > 4; X = atom_chars(des)).
-	
-	
+
+%Pentru atomi
+alege_custom([Raspuns], [HO|TO], X):-
+	atom(Raspuns),
+	if(Raspuns = HO,
+		X = [HO],
+		alege_custom([Raspuns], TO, X)).
+
+%Pentru numere
+alege_custom([Raspuns], [HO|TO], X):-
+	number(Raspuns), Raspuns >= 0,
+	if(Raspuns =< HO,
+		X = [HO],
+		alege_custom([Raspuns], TO, X)).
+
+%Daca s-a ajuns la capatul listei fara sa gaseasca vreun raspuns care sa se potriveasca
+alege_custom([Raspuns],[],-1):-
+	format('Raspunsul ~w este invalid.~N',[Raspuns]).
 	
 /* proceseaza_raspuns ------------------------------------------------------------------------
 	Specificatie predicat: proceseaza_raspuns(+Input, +Istorie, +ListaOptiuni)
@@ -565,9 +575,12 @@ proceseaza_raspuns([de_ce], Istorie, _):-
 	afis_istorie(Istorie),
 	!,
 	fail.
+
 proceseaza_raspuns([X], _, Lista_opt):-
 	member(X, Lista_opt).
+	
 proceseaza_raspuns([X,fc,FC], _, Lista_opt):-
+	format('~w ~w~N',[X, FC]),
 	member(X, Lista_opt), float(FC).
 	
 
@@ -738,7 +751,8 @@ incarca_reguli:-
 */
 cauta_solutii_posibile:-
 	scop(Scop),
-	regula(Nr,ListaPremise,concluzie(av(Scop,Sol),_)),
+	%regula(Nr,ListaPremise,concluzie(av(Scop,Sol),_)),
+	regula(_,_,concluzie(av(Scop,Sol),_)),
 	scrie_fis_sol(Sol),
 	fail;true.
 
