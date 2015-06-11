@@ -1,0 +1,8 @@
+'IT - Programator'
+'IT - Tester'
+'IT - Administrator'
+'IT - Freelancer'
+'IT - Programator'
+'IT - Tester'
+'IT - Administrator'
+'IT - Freelancer'
