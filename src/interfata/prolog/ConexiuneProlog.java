@@ -8,25 +8,25 @@ import java.net.ServerSocket;
 
 public class ConexiuneProlog {
     //Cale catre executabilul Sicstus
-    final String executabilSicstus = "E:\\SICStus Prolog 4.0.2\\bin\\spwin.exe";
+    final String executabilSicstus = "C:\\Users\\Simionescu Adrian\\Documents\\Old Windows\\FMI UNIBUC\\CTI\\anul III\\Sem II\\Sisteme Expert\\Sicstus\\SICStus Prolog 4.0.2\\bin\\spwin.exe";
     //Cale catre fisierul prolog parsor
-    final String numeFisier = "exemplu_prolog.pl";
+    final String numeFisier = "system.pl";
     //Predicatul principal al fisierului prolog – cel care porneste comunicarea din partea cealalta
-    final String scop = "inceput.";
+    final String scop = "pornire.";
     
     //Instantiaza obiecte de tip proces si pentru interactionarea cu Sicstus
     Process procesSicstus;
     CititorMesaje cititor;
     ExpeditorMesaje expeditor;
     //Instantiaza interfata si portul pentru conexiune
-    GUI interfata;
+    MainPannel interfata;
     int port;
     
     //Returneaza interfata
-    public GUI getInterfata() { return interfata;
-    }
+    public MainPannel getInterfata() { return interfata;}
     
-    public ConexiuneProlog(int setPort, GUI setInterfata) throws IOException, InterruptedException {
+    public ConexiuneProlog(int setPort, MainPannel setInterfata) throws IOException, InterruptedException
+    {
         //Seteaza valoarea pentru port si interfata, si creaza doua fluxuri de date de intrare
         InputStream processIs, processStreamErr;
         port = setPort;
@@ -55,10 +55,11 @@ public class ConexiuneProlog {
     
     
     //Functie apelata in InterfataProlog atunci cand se inchide fereastra
-    void opresteProlog() throws InterruptedException {
+    void opresteProlog() throws InterruptedException
+    {
         PipedOutputStream pos= this.expeditor.getPipedOutputStream();
         PrintStream ps=new PrintStream(pos);
-        ps.println("exit.");
+        ps.println("iesire.");
         ps.flush();
     }
 }
