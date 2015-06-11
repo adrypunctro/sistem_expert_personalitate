@@ -83,6 +83,13 @@ public class CititorMesaje extends Thread {
                         public void run() {
                             //Afiseaza textul citit in campul din interfata
                             //TODO conexiune.getInterfata().getDebugTextArea().append(sirDeScris);
+                            //conexiune.getInterfata().
+                            
+                            System.out.println(sirDeScris);
+                            
+                            if(sirDeScris.startsWith("rezultat:"))
+                                conexiune.getInterfata().afis_rez(sirDeScris);
+                            
                         }
                     }); //End SwingUtilities..
                 }//End if
