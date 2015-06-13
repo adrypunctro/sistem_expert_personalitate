@@ -16,6 +16,7 @@ public class CititorMesaje extends Thread {
     volatile Socket socket = null; //Volatile ca sa fie protejat la accesul concurent al mai multor threaduri
     volatile PipedInputStream pIS = null;
     ConexiuneProlog conexiune;
+    private boolean rezultat = false;
     
     //Setteri sincronizati
     public synchronized void setSocket(Socket setS) {
@@ -85,10 +86,60 @@ public class CititorMesaje extends Thread {
                             //TODO conexiune.getInterfata().getDebugTextArea().append(sirDeScris);
                             //conexiune.getInterfata().
                             
-                            System.out.println(sirDeScris);
+                            System.out.print("<<");
+                            System.out.print(sirDeScris);
+                            System.out.println(">>");
                             
                             if(sirDeScris.startsWith("rezultat:"))
+                            {
                                 conexiune.getInterfata().afis_rez(sirDeScris);
+                                rezultat = true;
+                            }
+                            
+                            if(rezultat)
+                            {
+                                System.err.print("+"+sirDeScris);
+                            }
+                            
+                            if(sirDeScris.startsWith("end rezultat"))
+                            {
+                                rezultat = false;
+                            }
+                           
+                            if(sirDeScris.startsWith("I:"))
+                            {
+                                String lines[] = sirDeScris.split("\\'");
+                                String intrebare = lines[1];
+                                lines[2] = lines[2].replace('(', ' ');
+                                lines[2] = lines[2].replace(')', ' ');
+                                lines[2] = lines[2].trim();
+                                String optiuni = lines[2].replace(' ', ',');
+                                
+                                conexiune.interfata.tabbedPane.newTab(intrebare, optiuni, 1);
+                                conexiune.interfata.tabbedPane.gotoTab(conexiune.interfata.tabbedPane.currentNr);
+                            }
+                            
+                            if(sirDeScris.startsWith("IC:"))
+                            {
+                                String lines[] = sirDeScris.split("\\'");
+                                String intrebare = lines[1];
+                                lines[2] = lines[2].replace('(', ' ');
+                                lines[2] = lines[2].replace(')', ' ');
+                                lines[2] = lines[2].trim();
+                                String optiuni = lines[2].replace(' ', ',');
+                                
+                                conexiune.interfata.tabbedPane.newTab(intrebare, optiuni, 1);
+                                conexiune.interfata.tabbedPane.gotoTab(conexiune.interfata.tabbedPane.currentNr);
+                            }
+                            
+                            if(sirDeScris.startsWith("IB:"))
+                            {
+                                String lines[] = sirDeScris.split("\\'");
+                                String intrebare = lines[1];
+                                
+                                conexiune.interfata.tabbedPane.newTab(intrebare, "da,nu", 2);
+                                conexiune.interfata.tabbedPane.gotoTab(conexiune.interfata.tabbedPane.currentNr);
+                            }
                             
                         }
                     }); //End SwingUtilities..

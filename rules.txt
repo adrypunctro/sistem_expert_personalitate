@@ -13,6 +13,237 @@ conditii={
 }
 atunci
     categorie_IT e egal cu da fc:80.
+	
+rg::1012
+conditii={
+    pasiune_tehnologie e egal cu pasionat,
+    loc_munca_riscant[fals],
+    discipline_preferate e egal cu reale
+}
+atunci
+    categorie_IT e egal cu da fc:50.
+
+rg::1021
+conditii={
+    sociabil,
+    preferinta_calatorii[fals],
+    loc_munca_riscant[fals],
+    nivel_plata e egal cu mare,
+    discipline_preferate e egal cu umane,
+    creativ
+}
+atunci
+    categorie_Business e egal cu da fc:80.
+
+rg::1031
+conditii={
+    sociabil,
+    preferinta_calatorii[fals],
+    loc_munca_riscant[fals],
+    preferinta_responsabilitate,
+    situatii_neprevazute,
+    nivel educatie e egal cu facultate
+}
+atunci
+    categorie_Academic e egal cu da fc:80.
+
+rg::1032
+conditii={
+    sociabil,
+    loc_munca_riscant[fals],
+    preferinta_responsabilitate,
+    nivel educatie e egal cu facultate
+}
+atunci
+    categorie_Academic e egal cu da fc:65.
+
+rg::1041
+conditii={
+    creativ,
+    loc_munca_riscant[fals],
+    loc_munca_relaxat,
+    lungime_program e egal cu la_alegere
+}
+atunci
+    categorie_Arta e egal cu da fc:80.
+
+rg::1042
+conditii={
+    creativ,
+    loc_munca_riscant[fals],
+    loc_munca_relaxat
+}
+atunci
+    categorie_Arta e egal cu da fc:70.
+
+rg::1051
+conditii={
+    sociabil,
+    loc_munca_riscant[fals],
+    nivel_plata e egal cu mare,
+    nivel_educatie e egal cu facultate
+}
+atunci
+    categorie_Guvernamental e egal cu da fc:80.
+	
+rg::1052
+conditii={
+    loc_munca_riscant[fals],
+    nivel_educatie e egal cu facultate
+}
+atunci
+    categorie_Guvernamental e egal cu da fc:70.
+
+rg::1061
+conditii={
+    sociabil,
+    loc_munca_relaxat,
+    loc_munca_riscant[fals],
+    preferinta_calatorii,
+    nivel_plata e egal cu mediu
+}
+atunci
+    categorie_International e egal cu da fc:80.
+
+	rg::1062
+conditii={
+    loc_munca_relaxat,
+    loc_munca_riscant[fals],
+    preferinta_calatorii
+}
+atunci
+    categorie_International e egal cu da fc:65.
+
+rg::1071
+conditii={
+    stare_fizica e egal cu buna,
+    loc_munca_riscant[fals],
+    lungime_program e egal cu incert,
+    preferinta_echipa e egal cu echipa_mica,
+    preferinta_outdoor
+}
+atunci
+    categorie_Sport e egal cu da fc:80.
+
+rg::1072
+conditii={
+    stare_fizica e egal cu normala,
+    loc_munca_riscant[fals],
+    lungime_program e egal cu incert,
+    preferinta_echipa e egal cu echipa_mica
+}
+atunci
+    categorie_Sport e egal cu da fc:70.
+
+rg::1073
+conditii={
+    stare_fizica e egal cu buna,
+    loc_munca_riscant[fals]
+}
+atunci
+    categorie_Sport e egal cu da fc:65.
+
+rg::1081
+conditii={
+    nivel_educatie e egal cu facultate,
+    loc_munca_relaxat[fals],
+    situatii_neprevazute,
+    preferinta_responsabilitate
+}
+atunci
+    categorie_Lege e egal cu da fc:80.
+
+rg::1091
+conditii={
+    loc_munca_riscant[fals],
+    lungime_program e egal cu full_time,
+    nivel_plata e egal cu mediu
+}
+atunci
+    categorie_Comunicatii e egal cu da fc:80.
+
+rg::1092
+conditii={
+    loc_munca_riscant[fals],
+    lungime_program e egal cu full_time
+}
+atunci
+    categorie_Comunicatii e egal cu da fc:60.
+
+rg::1101
+conditii={
+    nivel_educatie e egal cu facultate,
+    loc_munca_relaxat[fals],
+    preferinta_responsabilitate,
+    nivel_plata e egal cu mare,
+    situatii_neprevazute  
+}
+atunci
+    categorie_Medicina e egal cu da fc:80.
+
+rg::1102
+conditii={
+    nivel_educatie e egal cu facultate,
+    loc_munca_relaxat[fals],
+    preferinta_responsabilitate,
+    situatii_neprevazute  
+}
+atunci
+    categorie_Medicina e egal cu da fc:70.
+
+rg::1111
+conditii={
+    loc_munca_riscant[fals],
+    nivel_educatie e egal cu facultate,
+    lungime_program e egal cu full_time,
+    loc_munca_relaxat
+}
+atunci
+    categorie_Stiinta e egal cu da fc:80.
+
+rg::1112
+conditii={
+    loc_munca_riscant[fals],
+    nivel_educatie e egal cu facultate
+}
+atunci
+    categorie_Stiinta e egal cu da fc:65.
+
+rg::1121
+conditii={
+    loc_munca_riscant[fals],
+    lungime_program e egal cu full_time,
+    sociabil
+}
+atunci
+    categorie_Serviciu_public e egal cu da fc:80.
+
+rg::1122
+conditii={
+    loc_munca_riscant[fals],
+    lungime_program e egal cu full_time
+}
+atunci
+    categorie_Serviciu_public e egal cu da fc:70.
+	
+rg::1131
+conditii={
+    stare_fizica e egal cu buna,
+    nivel_plata e egal cu mediu,
+    preferinta_outdoor,
+    preferinta_animale
+}
+atunci
+    categorie_Ecologic e egal cu da fc:80.
+
+rg::1132
+conditii={
+    nivel_plata e egal cu mediu,
+    preferinta_outdoor,
+    preferinta_animale
+}
+atunci
+    categorie_Ecologic e egal cu da fc:70.
 
 rg::2011
 conditii={
@@ -49,121 +280,6 @@ conditii={
 }
 atunci
     ocupatie e egal cu 'IT - Freelancer' fc:90.
-
-rg::1021
-conditii={
-    sociabil,
-    preferinta_calatorii[fals],
-    loc_munca_riscant[fals],
-    nivel_plata e egal cu mare,
-    discipline_preferate e egal cu umane,
-    creativ
-}
-atunci
-    categorie_Business e egal cu da fc:80.
-
-rg::1031
-conditii={
-    sociabil,
-    preferinta_calatorii[fals],
-    loc_munca_riscant[fals],
-    preferinta_responsabilitate,
-    situatii_neprevazute,
-    nivel educatie e egal cu facultate
-}
-atunci
-    categorie_Academic e egal cu da fc:80.
-
-rg::1041
-conditii={
-    creativ,
-    loc_munca_riscant[fals],
-    loc_munca_relaxat,
-    lungime_program e egal cu la_alegere
-}
-atunci
-    categorie_Arta e egal cu da fc:80.
-
-rg::1051
-conditii={
-    sociabil,
-    loc_munca_riscant[fals],
-    nivel_plata e egal cu mare,
-    nivel_educatie e egal cu facultate
-}
-atunci
-    categorie_Guvernamental e egal cu da fc:80.
-
-rg::1061
-conditii={
-    sociabil,
-    loc_munca_relaxat,
-    loc_munca_riscant[fals],
-    preferinta_calatorii,
-    nivel_plata e egal cu mediu
-}
-atunci
-    categorie_International e egal cu da fc:80.
-
-rg::1071
-conditii={
-    stare_fizica e egal cu buna,
-    loc_munca_riscant[fals],
-    lungime_program e egal cu incert,
-    preferinta_echipa e egal cu echipa_mica,
-    preferinta_outdoor
-}
-atunci
-    categorie_Sport e egal cu da fc:80.
-
-rg::1081
-conditii={
-    nivel_educatie e egal cu facultate,
-    loc_munca_relaxat[fals],
-    situatii_neprevazute,
-    preferinta_responsabilitate
-}
-atunci
-    categorie_Lege e egal cu da fc:80.
-
-rg::1091
-conditii={
-    loc_munca_riscant[fals],
-    lungime_program e egal cu full_time,
-    nivel_plata e egal cu mediu
-}
-atunci
-    categorie_Comunicatii e egal cu da fc:80.
-
-rg::1101
-conditii={
-    nivel_educatie e egal cu facultate,
-    loc_munca_relaxat[fals],
-    preferinta_responsabilitate,
-    nivel_plata e egal cu mare,
-    situatii_neprevazute  
-}
-atunci
-    categorie_Medicina e egal cu da fc:80.
-
-rg::1111
-conditii={
-    loc_munca_riscant[fals],
-    nivel_educatie e egal cu facultate,
-    lungime_program e egal cu full_time,
-    loc_munca_relaxat
-}
-atunci
-    categorie_Stiinta e egal cu da fc:80.
-
-rg::1121
-conditii={
-    loc_munca_riscant[fals],
-    lungime_program e egal cu full_time,
-    sociabil
-}
-atunci
-    categorie_Serviciu_public e egal cu da fc:80.
 
 rg::2021
 conditii={
@@ -206,7 +322,7 @@ atunci
 rg::2041
 conditii={
     categorie_Arta,
-    preferinta_arta e egal cu literara,
+    preferinta_citit,
     preferinta_echipa e egal cu singur
 }
 atunci
@@ -215,7 +331,7 @@ atunci
 rg::2042
 conditii={
     categorie_Arta,
-    preferinta_arta e egal cu vizuala,
+    preferinta_citit[fals],
     preferinta_echipa e egal cu singur
 }
 atunci
@@ -224,7 +340,7 @@ atunci
 rg::2043
 conditii={
     categorie_Arta,
-    preferinta_echipa e egal cu echipa_mica,
+    preferinta_echipa e egal cu echipa_mica
 }
 atunci
     ocupatie e egal cu 'Arta - Compozitor' fc:90.
@@ -232,12 +348,34 @@ atunci
 rg::2044
 conditii={
     categorie_Arta,
-    preferinta_arta e egal cu vizuala,
+    input_ore_tv_zi e egal cu 10,
     preferinta_echipa e egal cu echipa_mica,
+    lider
 }
 atunci
-    ocupatie e egal cu 'Arta - Cinematografie' fc:90.
+    ocupatie e egal cu 'Arta - Regizor' fc:90.
 
+rg::2045
+conditii={
+    categorie_Arta,
+    input_ore_tv_zi e egal cu 6,
+    preferinta_echipa e egal cu echipa_mica,
+    lider
+}
+atunci
+    ocupatie e egal cu 'Arta - Regizor' fc:70.
+
+rg::2046
+conditii={
+    categorie_Arta,
+    input_ore_tv_zi e egal cu 6,
+    stare_fizica e egal cu buna,
+    preferinta_echipa e egal cu echipa_mica
+
+}
+atunci
+    ocupatie e egal cu 'Arta - Actor' fc:70.
+	
 rg::2051
 conditii={
     categorie_Guvernamental,
@@ -276,17 +414,26 @@ atunci
 
 rg::2072
 conditii={
+    categorie_Sport,
+    input_ore_tv_zi e egal cu 10
+}
+atunci
+    ocupatie e egal cu 'Sport - Comentator' fc:80.
+
+rg::2073
+conditii={
     categorie_Sport
 }
 atunci
-    ocupatie e egal cu 'Sport - Sportiv de performanta' fc:90.
+    ocupatie e egal cu 'Sport - Sportiv de performanta' fc:70.
 
 rg::2081
 conditii={
     categorie_Lege,
+    sufletist,
     loc_munca_riscant,
     stare_fizica e egal cu buna,
-    lungime_program e egal cu full_time,
+    lungime_program e egal cu full_time
 }
 atunci
     ocupatie e egal cu 'Lege - Politie' fc:90.
@@ -294,23 +441,226 @@ atunci
 rg::2082
 conditii={
     categorie_Lege,
+    sufletist,
     loc_munca_riscant,
-    stare_fizica e egal cu buna,
-    lungime_program e egal cu incert,
-    preferinta_echipa e egal cu echipa_mica,
+    stare_fizica e egal cu normala
 }
 atunci
-    ocupatie e egal cu 'Lege - Armata' fc:90.
+    ocupatie e egal cu 'Lege - Politie' fc:80.
 
 rg::2083
 conditii={
     categorie_Lege,
+    loc_munca_riscant,
+    stare_fizica e egal cu buna,
+    lungime_program e egal cu incert,
+    preferinta_echipa e egal cu echipa_mica
+}
+atunci
+    ocupatie e egal cu 'Lege - Armata' fc:90.
+
+rg::2084
+conditii={
+    categorie_Lege,
     loc_munca_riscant[fals],
+    discipline_preferate e egal cu umane
 }
 atunci
     ocupatie e egal cu 'Lege - Avocat' fc:80.
 
+rg::2091
+conditii={
+    categorie_Comunicatii,
+    loc_munca_relaxat, 
+    preferinta_calatorii[fals]    
+}
+atunci
+    ocupatie e egal cu 'Comunicatii - Jurnalist' fc:90.
 
+rg::2092
+conditii={
+    categorie_Comunicatii,
+    preferinta_calatorii,
+    preferinta_outdoor
+}
+atunci
+    ocupatie e egal cu 'Comunicatii - Reporter' fc:90.
+
+rg::2101
+conditii={
+    categorie_Medicina,
+    loc_munca_riscant,
+    lungime_program e egal cu incert,
+    preferinta_echipa e egal cu echipa_mica,
+    sufletist
+}
+atunci
+    ocupatie e egal cu 'Medicina - Chirurg' fc:90.
+
+rg::2102
+conditii={
+    categorie_Medicina,
+    loc_munca_riscant[fals],
+    lungime_program e egal cu full_time,
+    preferinta_echipa e egal cu singur
+}
+atunci
+    ocupatie e egal cu 'Medicina - Medicina generala' fc:90.
+
+rg::2103
+conditii={
+    categorie_Medicina,
+    loc_munca_riscant,
+    lungime_program e egal cu incert,
+    preferinta_echipa e egal cu echipa_mica,
+    stare_fizica e egal cu buna,
+    sufletist
+}
+atunci 
+    ocupatie e egal cu 'Medicina - Paramedic' fc:90.
+	
+rg::2111
+conditii={
+    categorie_Stiinta,
+    preferinta_outdoor,
+    stare_fizica e egal cu buna
+}
+atunci
+    ocupatie e egal cu 'Stiinta - Agricultor' fc:90.
+
+rg::2112
+conditii={
+    categorie_Stiinta,
+    pasiune_tehnologie e egal cu pasionat,
+    inovator,
+    preferinta_outdoor[fals],
+    discipline_preferate e egal cu reale
+}
+atunci
+    ocupatie e egal cu 'Stiinta - Researcher' fc:90.
+
+rg::2113
+conditii={
+    categorie_Stiinta,
+    pasiune_tehnologie e egal cu pasionat,
+    inovator,
+    creativ,
+    discipline_preferate e egal cu reale
+}
+atunci
+    ocupatie e egal cu 'Stiinta - Arhitect' fc:90.
+
+rg::2121
+conditii={
+    categorie_Serviciu_public,
+    nivel_educatie e egal cu liceu,
+    loc_munca_relaxat
+}
+atunci
+    ocupatie e egal cu 'Serviciu Public - Transporturi' fc:90.
+
+rg::2122
+conditii={
+    categorie_Serviciu_public,
+    loc_munca_relaxat[fals]
+}
+atunci
+    ocupatie e egal cu 'Serviciu Public - Functionar' fc:80.
+
+rg::2123
+conditii={
+    categorie_Serviciu_public,
+    loc_munca_relaxat[fals]
+}
+atunci
+    ocupatie e egal cu 'Serviciu Public - Economist' fc:70.
+
+rg::2131
+conditii={
+    categorie_Ecologic,
+    loc_munca_relaxat,
+    loc_munca_riscant[fals],
+    preferinta_echipa e egal cu singur
+}
+atunci
+    ocupatie e egal cu 'Ecologic - Fermier' fc:80.
+
+rg::2132
+conditii={
+    categorie_Ecologic,
+    loc_munca_relaxat,
+    loc_munca_riscant[fals],
+    situatii_neprevazute,
+    preferinta_echipa e egal cu echipa_mica
+}
+atunci
+    ocupatie e egal cu 'Ecologic - Zoolog' fc:80.
+
+rg::2133
+conditii={
+    categorie_Ecologic,
+    loc_munca_riscant,
+    preferinta_calatorii,
+    lider,
+    preferinta_echipa e egal cu singur
+}
+atunci
+    ocupatie e egal cu 'Ecologic - Ghid expeditie' fc:90.
+
+rg::2141
+conditii={
+    loc_munca_riscant[fals],
+    lungime_program e egal cu la_alegere,
+    sociabil,
+    nivel_educatie e egal cu liceu,
+    loc_munca_relaxat,
+    input_mese_gatite e egal cu 3
+}
+atunci
+    ocupatie e egal cu 'Altele - Lucrator fast food' fc:70.
+
+rg::2142
+conditii={
+    loc_munca_riscant[fals],
+    lungime_program e egal cu full_time,
+    nivel_educatie e egal cu liceu,
+    preferinta_echipa e egal cu echipa_mica,
+    lider,
+    input_mese_gatite e egal cu 7
+}
+atunci
+    ocupatie e egal cu 'Altele - Bucatar profesionist' fc:90.
+
+rg::2143
+conditii={
+    loc_munca_riscant[fals],
+    lungime_program e egal cu full_time,
+    preferinta_echipa e egal cu echipa_mica,
+    input_mese_gatite e egal cu 7
+}
+atunci
+    ocupatie e egal cu 'Altele - Bucatar profesionist' fc:65.
+
+rg::2144
+conditii={
+    loc_munca_riscant[fals],
+    nivel_educatie e egal cu liceu,
+    nivel_plata e egal cu mic,
+    preferinta_responsabilitate[fals]
+}
+atunci
+    ocupatie e egal cu 'Altele - Asistent' fc:70.
+
+rg::2145
+conditii={
+    loc_munca_riscant[fals],
+    sufletist,
+    sociabil,
+    nivel_plata e egal cu mic,
+    preferinta_responsabilitate
+}
+atunci
+    ocupatie e egal cu 'Altele - Lucrator caritate' fc:75.
 
 ??? lungime_program
 raspunsuri posibile: full_time; incert; la_alegere; 
@@ -376,3 +726,26 @@ intrebare 'Va considerati o persoana creativa?'.
 raspunsuri posibile: da; nu;
 intrebare 'Ati prefera o pozitie de leadership?'.
 
+??? preferinta_citit
+raspunsuri posibile: da; nu;
+intrebare 'Va place sa cititi carti?'.
+
+??? input_ore_tv_zi !input
+raspunsuri posibile: 0, 2, 6, 10, 24;
+intrebare 'Cate ore petreceti in fata televizorului pe zi?'.
+
+??? preferinta_animale
+raspunsuri posibile: da; nu;
+intrebare 'Va place compania animalelor?'.
+
+??? sufletist
+raspunsuri posibile: da; nu;
+intrebare 'Va place sa ajutati alti oameni?'.
+
+??? inovator
+raspunsuri posibile: da; nu;
+intrebare 'Va place sa inovati sau sa aflati lucruri noi?'.
+
+??? input_mese_gatite !input
+raspunsuri posibile: 0, 3, 7;
+intrebare 'Cat de des gatiti pe saptamana?'.

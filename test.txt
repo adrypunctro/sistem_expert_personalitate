@@ -49,13 +49,25 @@ conditii={
 atunci
     test e egal cu 3 fc:80.
 
+rg::35
+conditii={
+    atr_test e egal cu luni,
+    atr_test2
+}
+atunci
+    test e egal cu zi fc:80.
+
+??? atr_test
+raspunsuri posibile: luni; marti; miercuri; joi; vineri; sambata; duminica; 
+intrebare 'Care este ziua dvs preferata?'.
+
+??? atr_test2
+raspunsuri posibile: da; nu; 
+intrebare 'Raspunde da!'.
+
 ??? atr_test
 raspunsuri posibile: 1; 2; 3; 
 intrebare 'Alegeti un numar!'.
-
-??? atr_test !input
-raspunsuri posibile: luni; marti; miercuri; joi; vineri; sambata; duminica; 
-intrebare 'Care este ziua dvs preferata?'.
 
 ??? atr_test !input
 raspunsuri posibile: 1; 5; 10; 9999; 

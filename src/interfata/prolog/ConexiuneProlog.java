@@ -6,13 +6,14 @@ import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 
-public class ConexiuneProlog {
+public class ConexiuneProlog
+{
     //Cale catre executabilul Sicstus
     final String executabilSicstus = "C:\\Users\\Simionescu Adrian\\Documents\\Old Windows\\FMI UNIBUC\\CTI\\anul III\\Sem II\\Sisteme Expert\\Sicstus\\SICStus Prolog 4.0.2\\bin\\spwin.exe";
     //Cale catre fisierul prolog parsor
-    final String numeFisier = "test_conexiune.pl";
+    final String numeFisier = "system.pl";
     //Predicatul principal al fisierului prolog – cel care porneste comunicarea din partea cealalta
-    final String scop = "inceput.";
+    final String scop = "pornire_app.";
     
     //Instantiaza obiecte de tip proces si pentru interactionarea cu Sicstus
     Process procesSicstus;

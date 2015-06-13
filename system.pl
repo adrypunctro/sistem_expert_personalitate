@@ -6,6 +6,7 @@
 :- use_module(library(lists)).
 :- use_module(library(system)).
 :- use_module(library(file_systems)).
+:- use_module(library(sockets)).
 
 
 
@@ -68,16 +69,15 @@ pornire:-
 	retractall(interogat(_)),
 	retractall(fapt(_,_,_)),
 	repeat,
+	%config(stream_java,Stream),
 	write('Introduceti una din urmatoarele optiuni: '),
 	nl, nl,
 	write(' (Incarca Consulta Reinitiaza Afisare_fapte Cum Iesire) '),
 	nl, nl,
-	%write('|: '),
+	flush_output,
 	citeste_linie([H|T]),
 	executa([H|T]),
 	H == iesire.
-
-	
 
 /* genereaza_fis_sol ------------------------------------------------------------------------
 	Specificatie predicat: genereaza_fis_sol(-NumeFisier)
@@ -97,8 +97,10 @@ genereaza_fis_sol(NumeFisier):-
 	Descriere: TODO: descriere
 */
 scrie_lista([]):-
+	%config(stream_java,Stream),
 	nl.
 scrie_lista([H|T]):-
+	%config(stream_java,Stream),
 	write(H),
 	write(' '),
 	scrie_lista(T).
@@ -110,6 +112,7 @@ scrie_lista([H|T]):-
 	Descriere: TODO: descriere
 */
 afiseaza_fapte:-
+	%config(stream_java,Stream),
 	write('Fapte existente in baza de cunostinte:'),
 	nl,
 	nl,
@@ -126,6 +129,7 @@ afiseaza_fapte:-
 	Descriere: TODO: descriere
 */
 listeaza_fapte:-
+	%config(stream_java,Stream),
 	fapt(av(Atr,Val), FC, _),
 	write('('),
 	write(Atr),
@@ -163,11 +167,14 @@ lista_float_int([Regula|Reguli],[Regula1|Reguli1]):-
 	Descriere: Predicatul executa comanda primita de la utilizator.
 */
 executa([incarca]):-
+	%config(stream_java,Stream),
 	incarca,
 	!,
 	nl,
 	write('Fisierul dorit a fost incarcat'),
-	nl.
+	nl,
+	flush_output.
+	
 executa([consulta]):-
 	fisiere_log,
 	scopuri_princ,
@@ -185,8 +192,10 @@ executa([cum|L]):-
 executa([iesire]):-
 	!.
 executa([_|_]):-
+	%config(stream_java,Stream),
 	write('Comanda incorecta! '),
-	nl.
+	nl,
+	flush_output.	
 
 	
 
@@ -237,7 +246,11 @@ append_fisier(Nume, Val):-
 scopuri_princ:-
 	scop(Atr),
 	determina(Atr),
+	write('rezultat:'),
 	afiseaza_scop(Atr),
+	write('end rezultat'),
+	nl,
+	flush_output,
 	fail.
 scopuri_princ.
 
@@ -259,6 +272,7 @@ determina(_).
 	Descriere: TODO: descriere
 */
 afiseaza_scop(Atr):-
+	%config(stream_java,Stream),
 	nl,
 	fapt(av(Atr,Val),FC,_),
 	FC >= 20,
@@ -266,6 +280,7 @@ afiseaza_scop(Atr):-
 	nl,
 	fail.
 afiseaza_scop(_):-
+	%config(stream_java,Stream),
 	nl, nl.
 
 
@@ -275,11 +290,10 @@ afiseaza_scop(_):-
 	Descriere: TODO: descriere
 */
 scrie_scop(av(Atr,Val),FC):-
+	%config(stream_java,Stream),
 	transformare(av(Atr,Val), X),
 	scrie_lista(X),
-	write('  '),
-	write(' '),
-	write('factorul de certitudine este '),
+	write('   factorul de certitudine este '),
 	FC1 is integer(FC),
 	write(FC1).
 
@@ -329,6 +343,7 @@ fg(Scop, FC, _):-
 	Descriere: TODO: descriere
 */
 pot_interoga(av(Atr,_), Istorie):-
+	%config(stream_java,Stream),
 	not interogat(av(Atr, _)),
 	interogabil(Atr, Optiuni, Mesaj, Custom),
 	interogheaza(Atr, Mesaj, Optiuni, Istorie, Custom),
@@ -342,6 +357,7 @@ pot_interoga(av(Atr,_), Istorie):-
 	Descriere: TODO: descriere
 */
 cum([]):-
+	%config(stream_java,Stream),
 	write('Scop? '),
 	nl,
 	write('|:'),
@@ -350,10 +366,12 @@ cum([]):-
 	transformare(Scop, Linie),
 	cum(Scop).
 cum(L):-
+	%config(stream_java,Stream),
 	transformare(Scop, L),
 	nl,
 	cum(Scop).
 cum(not Scop):-
+	%config(stream_java,Stream),
 	fapt(Scop, FC, Reguli),
 	lista_float_int(Reguli, Reguli1),
 	FC < -20,
@@ -364,6 +382,7 @@ cum(not Scop):-
 	afis_reguli(Reguli),
 	fail.
 cum(Scop):-
+	%config(stream_java,Stream),
 	fapt(Scop, FC, Reguli),
 	lista_float_int(Reguli,Reguli1),
 	FC > 20,
@@ -394,6 +413,7 @@ afis_reguli([N|X]):-
 	Descriere:
 */
 afis_regula(N):-
+	%config(stream_java,Stream),
 	regula(N, premise(Lista_premise), concluzie(Scop, FC)),
 	NN is integer(N),
 	scrie_lista(['regula ', NN]),
@@ -415,6 +435,7 @@ afis_regula(N):-
 */
 scrie_lista_premise([]).
 scrie_lista_premise([H|T]):-
+	%config(stream_java,Stream),
 	transformare(H,H_tr),
 	write('     '),
 	scrie_lista(H_tr),
@@ -483,24 +504,36 @@ scrie_fis_log(Atr, [Val|_]):-
 	Descriere: Predicatul interogheaza utilizatorul. Ii afiseaza intrebarea si proceseaza raspunsul.
 */
 interogheaza(Atr, Mesaj, Optiuni, Istorie, 1):-% pentru intrebarea cu raspuns custom
+	%config(stream_java,Stream),
 	!,
+	flush_output,
+	write('IC:'),
 	write(Mesaj),
 	write(' CUSTOM'),
-	nl,
+	%nl,
 	citeste_opt(VLista, Optiuni, Istorie, 1),% citire custom
 	scrie_fis_log(Atr,VLista),% scrie raspunsul in fisierul log.txt
 	assert_fapt(Atr, VLista).
+	
 interogheaza(Atr, Mesaj, [da,nu], Istorie, 0):-% pentru intrebarea cu raspuns da/nu
+	%config(stream_java,Stream),
 	!,
+	flush_output,
+	write('IB:'),
 	write(Mesaj),
 	nl,
+	flush_output,
 	de_la_utiliz(X, Istorie, [da, nu], 0),
 	det_val_fc(X, Val, FC),
 	scrie_fis_log(Atr,X),% scrie raspunsul in fisierul log.txt
 	asserta(fapt(av(Atr, Val), FC, [utiliz])).
+	
 interogheaza(Atr, Mesaj, Optiuni, Istorie, 0):-% pentru intreb. cu raspuns din optiuni
+	%config(stream_java,Stream),
+	flush_output,
+	write('I:'),
 	write(Mesaj),
-	nl,
+	%nl,
 	citeste_opt(VLista, Optiuni, Istorie, 0),
 	scrie_fis_log(Atr,VLista),% scrie raspunsul in fisierul log.txt
 	assert_fapt(Atr, VLista).
@@ -527,12 +560,16 @@ citeste_opt(X, Optiuni, Istorie, 1):-% citire custom
 	Descriere:
 */
 de_la_utiliz(X, Istorie, Lista_opt, 0):-
+	%config(stream_java,Stream),
+	flush_output,
 	repeat,
 	write(': '),
 	citeste_linie(X),
 	proceseaza_raspuns(X, Istorie, Lista_opt).
 
 de_la_utiliz(X, Istorie, Lista_opt, 1):-
+	%config(stream_java,Stream),
+	flush_output,
 	repeat,
 	write(': '),
 	citeste_linie(XCustom),
@@ -564,6 +601,7 @@ alege_custom([Raspuns], [HO|TO], X):-
 
 %Daca s-a ajuns la capatul listei fara sa gaseasca vreun raspuns care sa se potriveasca
 alege_custom([Raspuns],[],-1):-
+	%config(stream_java,Stream),
 	format('Raspunsul ~w este invalid.~N',[Raspuns]).
 	
 /* proceseaza_raspuns ------------------------------------------------------------------------
@@ -571,6 +609,7 @@ alege_custom([Raspuns],[],-1):-
 	Descriere: Predicatul primeste raspunsul de la utilizator si il proceseaza.
 */
 proceseaza_raspuns([de_ce], Istorie, _):-
+	%config(stream_java,Stream),
 	nl,
 	afis_istorie(Istorie),
 	!,
@@ -617,6 +656,7 @@ det_val_fc([Val],Val,100).
 	Descriere:
 */
 afis_istorie([]):-
+	%config(stream_java,Stream),
 	nl.
 afis_istorie([scop(X)|T]):-
 	scrie_lista([scop, X]),
@@ -706,16 +746,20 @@ combina(FC1, FC2, FC):-
 	Descriere:
 */
 incarca:-
+	%config(stream_java,Stream),
 	write('Introduceti numele fisierului care doriti sa fie incarcat: '),
 	nl,
 	write('|:'),
+	flush_output,
 	read(F),
 	file_exists(F),
 	!,
 	incarca(F).
 incarca:-
+	%config(stream_java,Stream),
 	write('Nume incorect de fisier! '),
 	nl,
+	flush_output,
 	fail.
 %Daca fisierul introdus exista
 incarca(F):-
@@ -727,6 +771,9 @@ incarca(F):-
 	see(F),
 	incarca_reguli,
 	seen,
+	config(stream_java,Stream),
+	set_input(Stream),
+	set_output(Stream),
 	!.
 
 
@@ -736,11 +783,12 @@ incarca(F):-
 	Descriere:
 */
 incarca_reguli:-
+	%config(stream_java,Stream),
 	repeat,
 	citeste_propozitie(L),
 	proceseaza(L),
 	L == [end_of_file],
-	nl,
+	%nl,
 	cauta_solutii_posibile.% cauta valorile pentru scop
 
 	
@@ -927,6 +975,7 @@ propoz(av(Atr, da)) -->
 	Descriere: Citeste de la tastatura, caracter cu caracter
 */
 citeste_linie([Cuv|Lista_cuv]):-
+	%config(stream_java,Stream),
 	get_code(Car),
 	citeste_cuvant(Car, Cuv, Car1),
 	rest_cuvinte_linie(Car1, Lista_cuv).
@@ -958,6 +1007,7 @@ rest_cuvinte_linie(Car, [Cuv|Lista_cuv]):-
 	Descriere:
 */
 citeste_propozitie([Cuv|Lista_cuv]):-
+	%config(stream_java,Stream),
 	get_code(Car),
 	citeste_cuvant(Car, Cuv, Car1),
 	rest_cuvinte_propozitie(Car1, Lista_cuv).
@@ -994,10 +1044,11 @@ citeste_cuvant(-1, end_of_file, -1):-
 
 %Daca citeste un caracter special
 citeste_cuvant(Caracter, Cuvant, Caracter1):-
+	%config(stream_java,Stream),
 	caracter_cuvant(Caracter),
 	!,
 	name(Cuvant, [Caracter]),
-	get_code(Caracter1).
+	get_code( Caracter1).
 
 %Daca citeste o cifra
 citeste_cuvant(Caracter, Numar, Caracter1):-
@@ -1007,12 +1058,13 @@ citeste_cuvant(Caracter, Numar, Caracter1):-
 	
 %39 este codul ASCII pentru ' citeste toate caracterele pana la urmatorul '
 citeste_cuvant(Caracter, Cuvant, Caracter1):-
+	%config(stream_java,Stream),
 	Caracter == 39,% '
 	!,
 	pana_la_urmatorul_apostrof(Lista_caractere),
 	L = [Caracter|Lista_caractere],
 	name(Cuvant, L),
-	get_code(Caracter1).
+	get_code( Caracter1).
 	
 %Daca citeste o majuscula o transforma in lowercase
 citeste_cuvant(Caracter, Cuvant, Caracter1):-
@@ -1027,6 +1079,7 @@ citeste_cuvant(Caracter, Cuvant, Caracter1):-
 	
 %Daca citeste o litera mica
 citeste_cuvant(_, Cuvant, Caracter1):-
+	%config(stream_java,Stream),
 	get_code(Caracter),
 	citeste_cuvant(Caracter, Cuvant, Caracter1).
 	
@@ -1048,6 +1101,7 @@ citeste_tot_numarul(Caracter, Numar, Caracter1):-
 	Descriere:
 */
 determina_lista(Lista, Caracter1):-
+	%config(stream_java,Stream),
 	get_code(Caracter),
 	(caracter_numar(Caracter),
 	determina_lista(Lista1, Caracter1),
@@ -1091,6 +1145,7 @@ lungime([_|T],L):-
 	Descriere:
 */
 pana_la_urmatorul_apostrof(Lista_caractere):-
+	%config(stream_java,Stream),
 	get_code(Caracter),
 	(Caracter == 39,% '
 	Lista_caractere=[Caracter];
@@ -1106,6 +1161,7 @@ pana_la_urmatorul_apostrof(Lista_caractere):-
 	Descriere:
 */
 citeste_intreg_cuvantul(Lista_Caractere, Caracter1):-
+	%config(stream_java,Stream),
 	get_code(Caracter),
 	(caractere_in_interiorul_unui_cuvant(Caracter),
 	((Caracter > 64, Caracter < 91),
@@ -1153,3 +1209,50 @@ caractere_in_interiorul_unui_cuvant(C):-
 */
 caracter_numar(C):-
 	C >= 48, C < 58.
+	
+	
+	
+/* pornire_app **************************************************************************
+	Specificatie predicat: pornire_app
+	Descriere: Folosit de catre aplicatia java.
+*/
+pornire_app:-
+	prolog_flag(argv, [PortSocket|_]),
+	atom_chars(PortSocket,LCifre),
+	number_chars(Port,LCifre),
+	socket_client_open(localhost: Port, Stream, [type(text)]),
+	set_input(Stream),
+	set_output(Stream),
+	proceseaza_text_primit(Stream,0).
+		
+% -------------------------------------------------------------------------------
+proceseaza_text_primit(Stream,C):-
+	read(Stream,CevaCitit),
+	proceseaza_termen_citit(Stream,CevaCitit,C).
+
+
+% -------------------------------------------------------------------------------
+proceseaza_termen_citit(Stream,pornire,C):-
+	% assert(config(stream_std,current_stream(_,))),
+	assert(config(stream_java,Stream)),
+	pornire,
+	write('Program pornit!\n'),
+	flush_output,
+	C1 is C+1,
+	proceseaza_text_primit(Stream,C1).
+
+proceseaza_termen_citit(Stream,incarca,C):-
+	executa([incarca]),
+	
+	C1 is C+1,
+	proceseaza_text_primit(Stream,C1).
+
+proceseaza_termen_citit(Stream,File,C):-
+	executa([incarca]),
+	C1 is C+1,
+	proceseaza_text_primit(Stream,C1).
+
+proceseaza_termen_citit(Stream,consulta,C):-
+	executa([consulta]),
+	C1 is C+1,
+	proceseaza_text_primit(Stream,C1).

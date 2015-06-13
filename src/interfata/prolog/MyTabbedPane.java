@@ -41,7 +41,7 @@ public class MyTabbedPane extends JPanel {
     private MainPannel interfata;
     private int width;
     private int height;
-    private int currentNr = 0;
+    public int currentNr = 0;
     private ImageIcon icon = null;// createImageIcon("src\\resources\\right.png")
     
     // Lista cu taburi
@@ -106,7 +106,7 @@ public class MyTabbedPane extends JPanel {
         
         tabs[currentNr] = makeTextPanel("Panel #"+(currentNr+1)+" (has a preferred size of 410 x 50).");
         tabs[currentNr].setLayout(null);
-        tabs[currentNr].setPreferredSize(new Dimension(410, 50));
+        tabs[currentNr].setPreferredSize(new Dimension(410, 50)); 
         
         String IntrebareConcat = new String();
         
@@ -176,15 +176,14 @@ public class MyTabbedPane extends JPanel {
                 
                 
                 if(
-                    (currTip == 1 && Arrays.asList(currOptiuni.split("\\;")).contains(raspunsuri[currentNr]))
+                    (currTip == 1 && Arrays.asList(currOptiuni.split("\\,")).contains(raspunsuri[currentNr]))
                     ||
                     (currTip == 2 && (raspunsuri[currentNr] == "DA" || raspunsuri[currentNr] == "NU"))
                 )// Verificam daca este corect
                 {
                     // Trimite catre Prolog
                     try {
-                        System.err.println(raspunsuri[currentNr]);
-                        interfata.cxp.expeditor.trimiteMesajSicstus(raspunsuri[currentNr]);
+                        interfata.cxp.expeditor.trimiteMesajSicstus(raspunsuri[currentNr],false);
                     } catch (InterruptedException ex) {
                         System.err.println("Comanda Prolog '"+raspunsuri[currentNr]+"' a esuat!");
                     }
@@ -206,8 +205,8 @@ public class MyTabbedPane extends JPanel {
 
 
                     currentNr++;
-                    newTab("Va place sportul?", "deloc;putin;mult", 1);
-                    tabbedPane.setSelectedIndex(currentNr);
+                    //newTab("Va place sportul?", "deloc,putin,mult", 1);
+                    //tabbedPane.setSelectedIndex(currentNr);
                 }
                 else// Afisam mesaj de eroare
                 {
@@ -221,6 +220,11 @@ public class MyTabbedPane extends JPanel {
         
         
         tabbedPane.addTab("I:"+(currentNr+1)+"", icon, tabs[currentNr],"Does nothing at all");
+    }
+    
+    public void gotoTab(int Nr)
+    {
+        tabbedPane.setSelectedIndex(Nr);
     }
     
     protected JComponent makeTextPanel(String text) {

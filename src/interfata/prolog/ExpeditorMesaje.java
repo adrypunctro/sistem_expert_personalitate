@@ -43,8 +43,17 @@ public class ExpeditorMesaje extends Thread {
     public void trimiteMesajSicstus(String mesaj) throws InterruptedException {
         PipedOutputStream pOS = getPipedOutputStream();
         PrintStream printS = new PrintStream (pOS);
-        printS.println(mesaj + " .");
+        printS.println(mesaj + ".");
         printS.flush();
+        System.err.println(mesaj);
+    }
+    
+    public void trimiteMesajSicstus(String mesaj, boolean sufix) throws InterruptedException {
+        PipedOutputStream pOS = getPipedOutputStream();
+        PrintStream printS = new PrintStream (pOS);
+        printS.println(mesaj);
+        printS.flush();
+        System.err.println(mesaj);
     }
     
     @Override

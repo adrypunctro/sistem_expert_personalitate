@@ -61,6 +61,7 @@ public class MainPannel
     private JPanel imagePanel3;// intro
     private JPanel imagePanel4;// consultatii
     private JPanel imagePanel5;// rezultat
+    private JPanel imageOcupatie;// imagine ocupatie
     
     MyTabbedPane tabbedPane;// tabed pane
     
@@ -243,12 +244,18 @@ public class MainPannel
         textArea.setBorder(BorderFactory.createCompoundBorder(border, BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         textArea.setEditable(false);
         textArea.setBackground(new Color(230, 230, 230));
+        textArea.setText("Demonstratie. Inputul nu poate fi interpretat...");
         
         // HEADER BODY REZULTAT ---------------------------------------------------
         final Image image5 = ImageIO.read(new File("src\\resources\\pannel_bg3.png"));
         imagePanel5 = new ImagePanel(image5, 0);
         imagePanel5.setLayout(null);
         imagePanel5.setVisible(false);
+        
+        final Image image6 = ImageIO.read(new File("src\\resources\\test.png"));
+        imageOcupatie = new ImagePanel(image6, 0);
+        imageOcupatie.setLayout(null);
+        imageOcupatie.setVisible(true);
         
         imagePanel5.add(label_rezultat);
         label_rezultat.setBounds(0, 0, MAIN_PANNEL_W, 100);
@@ -263,6 +270,8 @@ public class MainPannel
         }
         imagePanel5.add(textArea);
         textArea.setBounds(720, 100, MAIN_PANNEL_W-760, 200);
+        imagePanel5.add(imageOcupatie);
+        imageOcupatie.setBounds(20, 100, MAIN_PANNEL_W-760, 200);
         
         
         // ---------------------------------------------------------------------
@@ -271,6 +280,7 @@ public class MainPannel
         mainFrame.setSize(MAIN_PANNEL_W,MAIN_PANNEL_H);
         mainFrame.setLayout(null);
         mainFrame.setVisible(true);
+        mainFrame.setResizable(false);
         
         mainFrame.add(imagePanel1);
         imagePanel1.setBounds(0, 0, MAIN_PANNEL_W, 80);
@@ -286,6 +296,7 @@ public class MainPannel
         
         mainFrame.add(imagePanel5);
         imagePanel5.setBounds(0, 130, MAIN_PANNEL_W, MAIN_PANNEL_H-130);
+        
 
         headerLabel = new JLabel("", JLabel.CENTER);        
         statusLabel = new JLabel("",JLabel.CENTER);    
@@ -311,15 +322,13 @@ public class MainPannel
                 {
                     try {
                         cxp.expeditor.trimiteMesajSicstus("pornire");// porneste programul
-                        cxp.expeditor.trimiteMesajSicstus("incarca");// asteapta sa fie incarcat fisierul cu reguli
-                        bar_buts[0].setEnabled(false);
-                        show_bt[0] = false;
-                        bar_buts[1].setEnabled(true);
-                        show_bt[1] = true;
-
                     } catch (InterruptedException ex) {
                         System.err.println("Comanda Prolog 'pornire' a esuat!");
                     }
+                    bar_buts[0].setEnabled(false);
+                    show_bt[0] = false;
+                    bar_buts[1].setEnabled(true);
+                    show_bt[1] = true;
                 }
             }
         });
@@ -329,6 +338,12 @@ public class MainPannel
             public void actionPerformed(ActionEvent evt) {
                 if(show_bt[1])
                 {
+                    try {
+                        cxp.expeditor.trimiteMesajSicstus("incarca", false);// asteapta sa fie incarcat fisierul cu reguli
+                        cxp.expeditor.trimiteMesajSicstus("'rules.txt'");
+                    } catch (InterruptedException ex) {
+                        System.err.println("Comanda Prolog 'pornire' a esuat!");
+                    }
                     //System.out.println("selecting consulta");
                     bar_buts[1].setEnabled(false);
                     show_bt[1] = false;
@@ -359,6 +374,16 @@ public class MainPannel
             }
         });
         
+        // Afisare ------------------------------------------------------------
+        bar_buts[4].addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                if(!show_bt[4])
+                {
+                    afis_rez(null);
+                }
+            }
+        });
+        
         
         // Start button --------------------------------------------------------
         startButton.addActionListener(new ActionListener() {
@@ -366,7 +391,7 @@ public class MainPannel
                 if(startButton.isEnabled())
                 {
                     try {
-                        cxp.expeditor.trimiteMesajSicstus("consulta");
+                        cxp.expeditor.trimiteMesajSicstus("consulta", false);
                     } catch (InterruptedException ex) {
                         System.err.println("Comanda Prolog 'consulta' a esuat!");
                     }
@@ -378,7 +403,7 @@ public class MainPannel
                     show_bt[2] = true;
                     
                     // Adauga prima intrebare
-                    tabbedPane.newTab("Sunteti o persoana pasionata de IT?(bla bla bla bla bla bla bla bla bla)", "deloc;putin;mult", 2);
+                    //tabbedPane.newTab("Sunteti o persoana pasionata de IT?(bla bla bla bla bla bla bla bla bla)", "deloc;putin;mult", 2);
                 }
             }
         });
